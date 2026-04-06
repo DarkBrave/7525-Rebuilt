@@ -20,6 +20,7 @@ import frc.robot.Subsystems.Drive.Drive;
 import frc.robot.Subsystems.Drive.DriveStates;
 import frc.robot.Subsystems.Hopper.Hopper;
 import frc.robot.Subsystems.Intake.Intake;
+import frc.robot.Subsystems.LEDs.LEDs;
 import frc.robot.Subsystems.Shooter.Shooter;
 import frc.robot.Subsystems.Vision.Vision;
 import org.littletonrobotics.junction.Logger;
@@ -34,6 +35,7 @@ public class Manager extends Subsystem<ManagerStates> {
 	private Hopper hopper;
 	private Intake intake;
 	private Vision vision;
+	private LEDs leds;
 
 	private Timer shiftTimer = new Timer();
 	private GameStates[] gameStates = ALLIANCE_WON_AUTONOMOUS;
@@ -64,6 +66,7 @@ public class Manager extends Subsystem<ManagerStates> {
 		hopper = Hopper.getInstance();
 		intake = Intake.getInstance();
 		vision = Vision.getInstance();
+		leds = LEDs.getInstance();
 
 		// IDLE <---> EXTENDED_IDLE
 		addTrigger(ManagerStates.IDLE, ManagerStates.EXTENDED_IDLE, () -> DRIVER_CONTROLLER.getPOV() == 0);
@@ -189,12 +192,14 @@ public class Manager extends Subsystem<ManagerStates> {
 		shooter.setState(getState().getShooterState());
 		hopper.setState(getState().getHopperState());
 		intake.setState(getState().getIntakeState());
+		leds.setState(getState().getLEDState());
 
 		Tracer.traceFunc("ShooterPeriodic", shooter::periodic);
 		Tracer.traceFunc("HopperPeriodic", hopper::periodic);
 		Tracer.traceFunc("IntakePeriodic", intake::periodic);
 		Tracer.traceFunc("DrivePeriodic", drive::periodic);
 		Tracer.traceFunc("VisionPeriodic", vision::periodic);
+		Tracer.traceFunc("LEDPeriodic", leds::periodic);
 		// Emergency stop to IDLE
 		if (DRIVER_CONTROLLER.getStartButton() || OPERATOR_CONTROLLER.getStartButton()) {
 			setState(ManagerStates.EXTENDED_IDLE);
