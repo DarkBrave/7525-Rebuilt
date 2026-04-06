@@ -19,9 +19,9 @@ public class LEDsConstants {
 	//Rio can only handle one addressable LED, so we have one super long strip, then split it into sections of LEDs
 	//TODO: Get actual values for index, and different strip lengths
 	public static final int LED_INDEX = 9;
-	public static final int LEFT_SIDE_LEDS_LENGTH = 24;
+	public static final int LEFT_SIDE_LEDS_LENGTH = 23;
 	public static final int RIGHT_SIDE_LEDS_LENGTH = 26;
-	public static final int UNDERGLOW_LEDS_LENGTH = 30;
+	public static final int UNDERGLOW_LEDS_LENGTH = 39;
 
   	public static final HSV PIONEERS_ORANGE = new HSV(10, 255, 255);
   	public static final HSV PIONEERS_BLUE = new HSV(107, 140, 200);
