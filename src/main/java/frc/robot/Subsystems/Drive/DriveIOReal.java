@@ -14,7 +14,7 @@ import frc.robot.Subsystems.Drive.TunerConstants.TunerSwerveDrivetrain;
 public class DriveIOReal implements DriveIO {
 
 	public DriveIOOutputs outputs = new DriveIOOutputs();
-	private final TunerSwerveDrivetrain drivetrain = new TunerSwerveDrivetrain(DrivetrainConstants, FrontLeft, FrontRight, BackLeft, BackRight);
+	private final TunerSwerveDrivetrain drivetrain = new TunerSwerveDrivetrain(DrivetrainConstants, 350,FrontLeft, FrontRight, BackLeft, BackRight);
 
 	@Override
 	public void logOutputs(DriveIOOutputs outputs) {

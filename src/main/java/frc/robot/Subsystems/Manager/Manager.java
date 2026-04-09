@@ -2,6 +2,7 @@ package frc.robot.Subsystems.Manager;
 
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.MetersPerSecond;
+import static edu.wpi.first.units.Units.RotationsPerSecond;
 import static frc.robot.GlobalConstants.Controllers.DRIVER_CONTROLLER;
 import static frc.robot.GlobalConstants.Controllers.OPERATOR_CONTROLLER;
 import static frc.robot.Subsystems.Manager.CurrentLimitConstants.*;
@@ -47,8 +48,8 @@ public class Manager extends Subsystem<ManagerStates> {
 	private double remainingPeriodTime = 10;
 
 	private static final String USE_FMS = "FMS";
-	private static final String FORCE_RED = "RED";
-	private static final String FORCE_BLUE = "BLUE";
+	private static final String ALLIANCE_WON_AUTO = "WON";
+	private static final String ALLIANCE_LOST_AUTO = "LOST";
 	private SendableChooser<String> autoWinnerChooser = new SendableChooser<>();
 
 	public static Manager getInstance() {
@@ -116,6 +117,7 @@ public class Manager extends Subsystem<ManagerStates> {
 				isHubActive() &&
 				Math.abs(drive.getAngleDiffBetweenShooterAndTarget().in(Degrees)) < SHOOTER_TARGET_ANGLE_DIFF_DEGREES &&
 				Math.abs(drive.getVelocity().in(MetersPerSecond)) < CLOSE_TO_NOT_MOVING_MPS &&
+				Math.abs(shooter.getWheelVelocity().minus(shooter.getWheelSetpoint()).in(RotationsPerSecond)) < CLOSE_TO_WHEEL_SETPOINT &&
 				getState() == WINDING_UP &&
 				drive.getState() == DriveStates.AIMLOCK_HUB &&
 				drive.isInTeamAllianceZone(drive.getPose())
@@ -136,15 +138,12 @@ public class Manager extends Subsystem<ManagerStates> {
 		// addTrigger(ManagerStates.RETRACTING_CLIMBER, ManagerStates.EXTENDING_CLIMBER, OPERATOR_CONTROLLER::getLeftBumperButtonPressed);
 
 		// Operator override HoodSnapDown
-		addRunnableTrigger(shooter::toggleTrenchProtection, OPERATOR_CONTROLLER::getBButtonPressed);
+		addRunnableTrigger(shooter::toggleTrenchProtection, () -> OPERATOR_CONTROLLER.getPOV() == 180);
 
 		addRunnableTrigger(
 			() -> {
-				var redWon = autoWinnerChooser.getSelected().equalsIgnoreCase(FORCE_RED);
-				if (redWon && Robot.isRedAlliance) gameStates = ALLIANCE_WON_AUTONOMOUS; // red won and we are red
-				if (redWon && !Robot.isRedAlliance) gameStates = ALLIANCE_LOST_AUTONOMOUS; //red won and we are blue
-				if (!redWon && Robot.isRedAlliance) gameStates = ALLIANCE_LOST_AUTONOMOUS; // red lost and we are red
-				if (!redWon && !Robot.isRedAlliance) gameStates = ALLIANCE_WON_AUTONOMOUS; // red lost and we are blue
+				if (autoWinnerChooser.getSelected().equalsIgnoreCase(ALLIANCE_LOST_AUTO)) gameStates = ALLIANCE_LOST_AUTONOMOUS;
+				else gameStates = ALLIANCE_WON_AUTONOMOUS;
 			},
 			() -> !autoWinnerChooser.getSelected().equalsIgnoreCase(USE_FMS)
 		);
@@ -166,8 +165,8 @@ public class Manager extends Subsystem<ManagerStates> {
 		hopper.getKickerMotor2().getConfigurator().apply(KICKER_LIMITS_2);
 
 		autoWinnerChooser.setDefaultOption("Use FMS", USE_FMS);
-		autoWinnerChooser.addOption("Force Red Auto Win", FORCE_RED);
-		autoWinnerChooser.addOption("Force Blue Auto Win", FORCE_BLUE);
+		autoWinnerChooser.addOption("Won Auto", ALLIANCE_WON_AUTO);
+		autoWinnerChooser.addOption("Lost Auto", ALLIANCE_LOST_AUTO);
 
 		SmartDashboard.putData("Auto Winner Override", autoWinnerChooser);
 	}

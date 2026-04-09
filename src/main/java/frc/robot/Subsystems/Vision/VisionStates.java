@@ -10,6 +10,19 @@ public enum VisionStates implements SubsystemStates {
 	IGNORE_BL_BR("Ignoring Back Left and Back Right Cameras", Set.of(0, 1));
 
 	String stateString;
+	Set<Integer> ignoreList;
 
-	VisionStates(String stateString, Set<Integer> ignoreID) {}
+	VisionStates(String stateString, Set<Integer> ignoreID) {
+		this.stateString = stateString;
+		this.ignoreList = ignoreID;
+	}
+
+	@Override
+	public String getStateString() {
+		return stateString;
+	}
+
+	public Set<Integer> getIgnoreList() {
+		return ignoreList;
+	}
 }

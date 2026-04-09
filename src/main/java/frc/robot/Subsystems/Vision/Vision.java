@@ -33,7 +33,7 @@ public class Vision extends Subsystem<VisionStates> {
 	private final VisionIOOutputs[] outputs;
 	private final Alert[] disconnectedAlerts;
 
-	private final Set<Integer> cameraIgnoreList = Set.of();
+	private Set<Integer> cameraIgnoreList = Set.of();
 
 	List<Pose3d> allTagPoses = new LinkedList<>();
 	List<Pose3d> allRobotPoses = new LinkedList<>();
@@ -56,7 +56,7 @@ public class Vision extends Subsystem<VisionStates> {
 					*/
 
 					case REAL -> new VisionIO[] { new VisionIOPhotonVision(BACK_LEFT_CAMERA_NAME, ROBOT_TO_BACK_LEFT_CAMERA), new VisionIOPhotonVision(BACK_RIGHT_CAMERA, ROBOT_TO_BACK_RIGHT_CAMERA), new VisionIOPhotonVision(SHOOTER_CAMERA, ROBOT_TO_SHOOTER_CAMERA) };
-					case SIM -> new VisionIO[] { new VisionIOPhotonVisionSim(BACK_LEFT_CAMERA_NAME, ROBOT_TO_BACK_LEFT_CAMERA, Drive.getInstance()::getPose), new VisionIOPhotonVisionSim(BACK_RIGHT_CAMERA, ROBOT_TO_BACK_RIGHT_CAMERA, Drive.getInstance()::getPose) };
+					case SIM -> new VisionIO[] { new VisionIOPhotonVisionSim(BACK_LEFT_CAMERA_NAME, ROBOT_TO_BACK_LEFT_CAMERA, Drive.getInstance()::getPose), new VisionIOPhotonVisionSim(BACK_RIGHT_CAMERA, ROBOT_TO_BACK_RIGHT_CAMERA, Drive.getInstance()::getPose), new VisionIOPhotonVisionSim(SHOOTER_CAMERA, ROBOT_TO_SHOOTER_CAMERA, Drive.getInstance()::getPose)  };
 					case TESTING -> new VisionIO[] { new VisionIOPhotonVision(BACK_LEFT_CAMERA_NAME, ROBOT_TO_BACK_LEFT_CAMERA), new VisionIOPhotonVision(BACK_RIGHT_CAMERA, ROBOT_TO_BACK_RIGHT_CAMERA) };
 				}
 			);
@@ -94,6 +94,7 @@ public class Vision extends Subsystem<VisionStates> {
 	@Override
 	public void runState() {
 		setState(decideVisionState());
+		cameraIgnoreList = getState().getIgnoreList();
 		allianceHubTags = Robot.isRedAlliance ? RED_HUB_TAGS : BLUE_HUB_TAGS;
 		allianceTrenchTags = Robot.isRedAlliance ? RED_TRENCH_SCORE_TAGS : BLUE_TRENCH_SCORE_TAGS;
 
@@ -256,7 +257,7 @@ public class Vision extends Subsystem<VisionStates> {
 	}
 
 	private VisionStates decideVisionState() {
-		if (Manager.getInstance().getState() == ManagerStates.WINDING_UP || Manager.getInstance().getState() == ManagerStates.SHOOTING_HUB) return VisionStates.IGNORE_BL_BR;
+		if (Manager.getInstance().getState() == ManagerStates.WINDING_UP && Drive.getInstance().isInTeamAllianceZone() || Manager.getInstance().getState() == ManagerStates.SHOOTING_HUB) return VisionStates.IGNORE_BL_BR;
 
 		if (Drive.getInstance().isInTeamAllianceZone()) {
 			if (Drive.getInstance().getPose().getY() > AutoAlignConstants.FIELD_WIDTH / 2) {
