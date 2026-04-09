@@ -60,10 +60,10 @@ public class LEDs extends Subsystem<LEDStates> {
 			case AA_NEUTRAL:
 				io.setDrivePattern(AUTOALIGN_PATTERN);
 				break;
-			case AA_TOWER_LEFT:
+			case AA_TRENCH_LEFT:
 				io.setDrivePattern(AUTOALIGN_PATTERN);
 				break;
-			case AA_TOWER_RIGHT:
+			case AA_TRENCH_RIGHT:
 				io.setDrivePattern(AUTOALIGN_PATTERN);
 				break;
 			case SNAKE_DRIVE:
