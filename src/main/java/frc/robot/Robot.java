@@ -65,6 +65,7 @@ public class Robot extends LoggedRobot {
 		autoChooser.addRoutine("left Sweeper 1 Cycle", autoRoutines::sweeperLeft1Cycle);
 		autoChooser.addRoutine("Right 1 Cycle Depot", autoRoutines::right1CycleDepot);
 		autoChooser.addRoutine("Drive Straight", autoRoutines::driveStraight);
+		autoChooser.addRoutine("Center Scire Preload", autoRoutines::CenterScorePreload);
 		SmartDashboard.putData("autoChooser", autoChooser);
 
 		RobotModeTriggers.autonomous().whileTrue(autoChooser.selectedCommandScheduler());

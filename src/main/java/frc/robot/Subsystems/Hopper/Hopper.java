@@ -3,6 +3,9 @@ package frc.robot.Subsystems.Hopper;
 import static frc.robot.GlobalConstants.ROBOT_MODE;
 
 import com.ctre.phoenix6.hardware.TalonFX;
+
+import frc.robot.GlobalConstants;
+import frc.robot.GlobalConstants.Controllers;
 import frc.robot.Subsystems.Hopper.HopperIO.HopperIOOutputs;
 import org.littletonrobotics.junction.Logger;
 import org.team7525.subsystem.Subsystem;
@@ -45,7 +48,9 @@ public class Hopper extends Subsystem<HopperStates> {
 	@Override
 	protected void runState() {
 		io.setTargetSpinVelocity(getState().getSpinVelocity());
-		io.setTargetKickerVelocity(getState().getKickVelocity());
+		if (!(GlobalConstants.Controllers.OPERATOR_CONTROLLER.getRightTriggerAxis() > Controllers.TRIGGERS_REGISTER_POINT)) {
+			io.setTargetKickerVelocity(getState().getKickVelocity());
+		} else { io.setTargetKickerVelocity(-getState().getKickVelocity());}
 		io.updateOutputs(outputs);
 
 		Logger.recordOutput(HopperConstants.SUBSYSTEM_NAME + "/SpinVelocityRPS", outputs.spinVelocityRPS);
