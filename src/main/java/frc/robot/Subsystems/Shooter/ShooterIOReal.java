@@ -47,10 +47,9 @@ public class ShooterIOReal implements ShooterIO {
 		hoodSetpoint = Degrees.zero();
 		leftMotor = new TalonFX(LEFT_SHOOTER_MOTOR_ID);
 		leftMotorConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
-		leftMotorConfig.Slot0.kP = 3.399E+34;
+		leftMotorConfig.Slot0.kP = wheelPID.getP();
 		leftMotorConfig.Slot0.kI = wheelPID.getI();
 		leftMotorConfig.Slot0.kD = wheelPID.getD();
-		leftMotorConfig.Voltage.PeakReverseVoltage = 0;
 		leftMotorConfig.CurrentLimits.StatorCurrentLimit = WHEEL_STRATOR_CURRENT_LIMIT;
 		leftMotor.getConfigurator().apply(leftMotorConfig);
 
@@ -78,13 +77,11 @@ public class ShooterIOReal implements ShooterIO {
 	@Override
 	public void setWheelVelocity(AngularVelocity velocity) {
 		wheelSetpoint = velocity;
-		//velocity = RotationsPerSecond.of(SmartDashboard.getNumber("SHOOTER SPEED", 0));
-		SmartDashboard.putNumber("SHOOTER SPEED", velocity.in(RotationsPerSecond));
 		if (velocity.in(RotationsPerSecond) == 0) {
 			leftMotor.stopMotor();
 			return;
 		}
-		leftMotor.setControl(wheelControlReq.withVelocity(velocity));
+		leftMotor.setControl(wheelControlReq.withVelocity(velocity).withFeedForward(wheelFeedforward.calculate(wheelSetpoint.in(RotationsPerSecond))));
 	}
 
 	@Override
