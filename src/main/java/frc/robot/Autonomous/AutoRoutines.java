@@ -28,6 +28,20 @@ public class AutoRoutines {
 		autoFactory.bind("PrintTest", autoCommands.printTest());
 	}
 
+	public AutoRoutine CenterScorePreload() {
+		AutoRoutine routine = autoFactory.newRoutine("CenterScorePreload");
+		AutoTrajectory part1 = ChoreoTraj.CenterScore8.asAutoTraj(routine);
+
+		routine.active().onTrue(Commands.print("AUTO STARTED")
+			.andThen(part1.resetOdometry())
+			.andThen(part1.cmd())
+			.andThen(new WaitCommand(5))
+			.andThen(autoCommands.startScoring())
+			.andThen(autoCommands.enableAgitation())
+		);
+		return routine;
+	}
+
 	public AutoRoutine Right2CycleRoutine() {
 		AutoRoutine routine = autoFactory.newRoutine("Right2CycleRoutine");
 		AutoTrajectory part1 = ChoreoTraj.Right2Cycle_P1.asAutoTraj(routine);

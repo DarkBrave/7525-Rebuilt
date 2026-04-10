@@ -45,7 +45,7 @@ def calculate_robot_angle(robot_pos, shooter_offset, shooter_rotation_deg, targe
 
 # ===== INPUT DATA =====
 
-robot_pos = (2.521347761154175 , 0.83667224646)
+robot_pos = (1.695774221420288 , 3.8330769538879395)
 
 shooter_offset = (-0.227013, -0.119366)
 
