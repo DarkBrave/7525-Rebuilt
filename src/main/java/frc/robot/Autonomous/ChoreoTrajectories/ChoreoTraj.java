@@ -24,7 +24,14 @@ public record ChoreoTraj(
     Pose2d initialPoseBlue,
     Pose2d endPoseBlue
 ) {
-    public static final ChoreoTraj Drive1 = new ChoreoTraj(
+    public static final ChoreoTraj CenterScore8 = new ChoreoTraj(
+	    "CenterScore8",
+	    OptionalInt.empty(),
+	    0.9327,
+	    new Pose2d(3.587, 3.833, Rotation2d.fromRadians(0)),
+	    new Pose2d(1.696, 3.833, Rotation2d.fromRadians(-1.564))
+	);
+	public static final ChoreoTraj Drive1 = new ChoreoTraj(
 	    "Drive1",
 	    OptionalInt.empty(),
 	    1.50695,
@@ -108,20 +115,14 @@ public record ChoreoTraj(
 	    new Pose2d(2.521, 7.233, Rotation2d.fromRadians(-2.5)),
 	    new Pose2d(2.521, 7.233, Rotation2d.fromRadians(-2.613))
 	);
-	public static final ChoreoTraj CenterScore8 = new ChoreoTraj(
-	    "CenterScore8",
-	    OptionalInt.empty(),
-	    0.9327,
-	    new Pose2d(3.587, 3.833, Rotation2d.fromRadians(0)),
-	    new Pose2d(1.696, 3.833, Rotation2d.fromRadians(-1.564))
-	);
 
     /**
      * A map between trajectory names and their corresponding data.
      * This allows for trajectory data to be looked up with strings during runtime.
      */
     public static final Map<String, ChoreoTraj> ALL_TRAJECTORIES = Map.ofEntries(
-    	Map.entry("Drive1", Drive1),
+    	Map.entry("CenterScore8", CenterScore8),
+		Map.entry("Drive1", Drive1),
 		Map.entry("Left2Cycle_P1", Left2Cycle_P1),
 		Map.entry("Left2Cycle_P2", Left2Cycle_P2),
 		Map.entry("Left2Cycle_P3", Left2Cycle_P3),
@@ -132,8 +133,7 @@ public record ChoreoTraj(
 		Map.entry("SweeperLeft1Cycle_P1", SweeperLeft1Cycle_P1),
 		Map.entry("SweeperLeft1Cycle_P2", SweeperLeft1Cycle_P2),
 		Map.entry("SweeperRight1Cycle_P1", SweeperRight1Cycle_P1),
-		Map.entry("SweeperRight1Cycle_P2", SweeperRight1Cycle_P2),
-		Map.entry("CenterScore8", CenterScore8)
+		Map.entry("SweeperRight1Cycle_P2", SweeperRight1Cycle_P2)
     );
 
     /**
