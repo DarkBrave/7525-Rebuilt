@@ -48,7 +48,7 @@ public class Hopper extends Subsystem<HopperStates> {
 	@Override
 	protected void runState() {
 		io.setTargetSpinVelocity(getState().getSpinVelocity());
-		if (!(GlobalConstants.Controllers.OPERATOR_CONTROLLER.getRightTriggerAxis() > Controllers.TRIGGERS_REGISTER_POINT)) {
+		if (!(GlobalConstants.Controllers.OPERATOR_CONTROLLER.getLeftTriggerAxis() > Controllers.TRIGGERS_REGISTER_POINT)) {
 			io.setTargetKickerVelocity(getState().getKickVelocity());
 		} else { io.setTargetKickerVelocity(-getState().getKickVelocity());}
 		io.updateOutputs(outputs);
