@@ -31,8 +31,8 @@ public final class ShooterConstants {
 	public static final AngularVelocity STANDBY_SPEED = RotationsPerSecond.of(65); //TODO: Change standby values to good values
 
 	//TODO: Change later if we actually add a table to do alliance shots
-	public static final Angle ALLIANCE_SHOT_ANGLE = Degrees.of(35);
-	public static final AngularVelocity ALLIANCE_SHOT_SPEED = RotationsPerSecond.of(65);
+	public static final Angle ALLIANCE_SHOT_ANGLE = Degrees.of(45);
+	public static final AngularVelocity ALLIANCE_SHOT_SPEED = RotationsPerSecond.of(45);
 
 	// Numerical constants (moved from magic literals)
 	public static final double SOLVER_EPSILON = 1e-6;
