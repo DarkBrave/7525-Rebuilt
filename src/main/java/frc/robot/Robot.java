@@ -66,6 +66,8 @@ public class Robot extends LoggedRobot {
 		autoChooser.addRoutine("Right 1 Cycle Depot", autoRoutines::right1CycleDepot);
 		autoChooser.addRoutine("Drive Straight", autoRoutines::driveStraight);
 		autoChooser.addRoutine("Center Scire Preload", autoRoutines::CenterScorePreload);
+		autoChooser.addRoutine("Center Score Depot", autoRoutines::CenterScoreDepot);
+		autoChooser.addRoutine("Center Score Depot and Climb", autoRoutines::CenterScoreDepotClimb);
 		SmartDashboard.putData("autoChooser", autoChooser);
 
 		RobotModeTriggers.autonomous().whileTrue(autoChooser.selectedCommandScheduler());

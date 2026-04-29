@@ -17,6 +17,8 @@ public class AutoRoutines {
 		autoFactory = new AutoFactory(Drive.getInstance()::getPose, Drive.getInstance()::resetPose, Drive.getInstance()::driveRobotAutonomous, true, Drive.getInstance());
 
 		autoFactory.bind("Idle", autoCommands.returnToIdle());
+		autoFactory.bind("ClimbPrep", autoCommands.ClimbPrep());
+		autoFactory.bind("Climb", autoCommands.Climb());
 		autoFactory.bind("Intake", autoCommands.intake());
 		autoFactory.bind("Intake And Pass", autoCommands.intakeAndPass());
 		autoFactory.bind("Wind To Shuttle", autoCommands.windToShuttle());
@@ -40,6 +42,37 @@ public class AutoRoutines {
 			.andThen(autoCommands.enableAgitation())
 		);
 		return routine;
+	}
+	public AutoRoutine CenterScoreDepot() {
+		AutoRoutine routine = autoFactory.newRoutine("CenterScoreDepot");
+		AutoTrajectory part1 = ChoreoTraj.CenterDepot.asAutoTraj(routine);
+
+		routine.active().onTrue(Commands.print("AUTO STARTED")
+			.andThen(part1.resetOdometry())
+			.andThen(part1.cmd())
+			.andThen(autoCommands.startScoring())
+			.andThen(autoCommands.enableAgitation())
+			.andThen(new WaitCommand(3))
+		);
+		return routine;  
+	}
+	
+	public AutoRoutine CenterScoreDepotClimb() {
+		AutoRoutine routine = autoFactory.newRoutine("CenterScoreDepot");
+		AutoTrajectory part1 = ChoreoTraj.CenterDepot.asAutoTraj(routine);
+		AutoTrajectory part2 = ChoreoTraj.CenterScoreToClimb.asAutoTraj(routine);
+
+		routine.active().onTrue(Commands.print("AUTO STARTED")
+			.andThen(part1.resetOdometry())
+			.andThen(part1.cmd())
+			.andThen(autoCommands.startScoring())
+			.andThen(autoCommands.enableAgitation())
+			.andThen(new WaitCommand(3))
+			.andThen(autoCommands.disableAgitation())
+			.andThen(part2.cmd())
+			.andThen(autoCommands.Climb())
+		);
+		return routine;  
 	}
 
 	public AutoRoutine Right2CycleRoutine() {
