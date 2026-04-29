@@ -29,6 +29,7 @@ public class IntakeConstants {
 	// States
 	public static final Angle INTAKE_IN_POS = Degrees.of(0.0);
 	public static final Angle INTAKE_OUT_POS = Degrees.of(-180);
+	public static final Angle INTAKE_CLIMB_POS = Degrees.of(-30);
 
 	public static final Angle INTAKE_AGITATING_IN_POS = Degrees.of(-70);
 	public static final Angle INTAKE_AGITATING_OUT_POS = Degrees.of(-120);

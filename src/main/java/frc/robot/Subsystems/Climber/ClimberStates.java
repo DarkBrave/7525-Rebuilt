@@ -1,20 +1,18 @@
 package frc.robot.Subsystems.Climber;
 
-import edu.wpi.first.units.measure.Angle;
 import org.team7525.subsystem.SubsystemStates;
 
 public enum ClimberStates implements SubsystemStates {
-	IDLE("IDLE", ClimberConstants.IDLE_SETPOINT),
+	RETRACTED("RETRACTED", ClimberConstants.RETRACT_SETPOINT),
 	EXTEND("EXTEND", ClimberConstants.EXTEND_SETPOINT),
-	RETRACT("RETRACT", ClimberConstants.RETRACT_SETPOINT),
 	HOLD("HOLD", ClimberConstants.HOLD_SETPOINT);
 
 	private final String stateString;
-	private final Angle setpoint;
+	private final Double speed;
 
-	ClimberStates(String stateString, Angle setpoint) {
+	ClimberStates(String stateString, double speed) {
 		this.stateString = stateString;
-		this.setpoint = setpoint;
+		this.speed = speed;
 	}
 
 	@Override
@@ -22,7 +20,7 @@ public enum ClimberStates implements SubsystemStates {
 		return stateString;
 	}
 
-	public Angle getClimberSetpoint() {
-		return setpoint;
+	public double getClimberSpeed() {
+		return speed;
 	}
 }

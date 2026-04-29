@@ -1,50 +1,58 @@
 package frc.robot.Subsystems.Climber;
 
 import static edu.wpi.first.units.Units.Rotations;
+import static frc.robot.GlobalConstants.Controllers.OPERATOR_CONTROLLER;
 
-import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.signals.MotorAlignmentValue;
+import com.ctre.phoenix6.signals.NeutralModeValue;
+
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.units.measure.Angle;
+
 import org.littletonrobotics.junction.Logger;
 
 public class ClimberIOReal implements ClimberIO {
 
 	protected TalonFX leftMotor;
-	protected TalonFX rightMotor;
-	protected Angle positionSetpoint;
-	protected PIDController pid;
+	protected PIDController climbPID;
+	protected double motorSpeed;
+	private boolean manualMode = false;
 
 	public ClimberIOReal() {
 		leftMotor = new TalonFX(ClimberConstants.LEFT_CLIMBER_MOTOR_ID);
-		rightMotor = new TalonFX(ClimberConstants.RIGHT_CLIMBER_MOTOR_ID);
-		rightMotor.setControl(new Follower(leftMotor.getDeviceID(), MotorAlignmentValue.Aligned));
+		leftMotor.setPosition(0);
+		leftMotor.setNeutralMode(NeutralModeValue.Brake);
+		climbPID = ClimberConstants.CLIMB_PID.get();
 
-		pid = ClimberConstants.CLIMB_PID.get();
-		positionSetpoint = ClimberConstants.IDLE_SETPOINT;
+		motorSpeed = ClimberConstants.IDLE_SETPOINT;
 	}
 
 	@Override
 	public void logOutputs(ClimberIOOutputs outputs) {
 		outputs.leftPosition = leftMotor.getPosition().getValue();
-		outputs.rightPosition = rightMotor.getPosition().getValue();
-		outputs.setpoint = positionSetpoint;
-
+		outputs.speed = motorSpeed;
+		Logger.recordOutput(ClimberConstants.SUBSYSTEM_NAME + "/Current", leftMotor.getSupplyCurrent().getValue());
+		Logger.recordOutput(ClimberConstants.SUBSYSTEM_NAME + "/CurrentStator", leftMotor.getStatorCurrent().getValue());
 		Logger.recordOutput(ClimberConstants.SUBSYSTEM_NAME + "/LeftPositionRot", outputs.leftPosition.in(Rotations));
-		Logger.recordOutput(ClimberConstants.SUBSYSTEM_NAME + "/RightPositionRot", outputs.rightPosition.in(Rotations));
-		Logger.recordOutput(ClimberConstants.SUBSYSTEM_NAME + "/SetpointRot", outputs.setpoint.in(Rotations));
+		Logger.recordOutput(ClimberConstants.SUBSYSTEM_NAME + "/SetpointRot", outputs.speed);
 	}
 
-	@Override
-	public void setPosition(Angle position) {
-		this.positionSetpoint = position;
-		leftMotor.set(pid.calculate(leftMotor.getPosition().getValue().in(Rotations), positionSetpoint.in(Rotations)));
-	}
 
-	@Override
-	public boolean atPositionSetpoint() {
-		double currentRot = leftMotor.getPosition().getValue().in(Rotations);
-		return Math.abs(currentRot - positionSetpoint.in(Rotations)) < ClimberConstants.CLIMB_POSITION_TOLERANCE.in(Rotations);
+	public void setSetpoint(double setpoint) {
+		motorSpeed = setpoint;
+		if (OPERATOR_CONTROLLER.getPOV() == 0) {
+			manualMode = true;
+			leftMotor.set(0.75);
+		} else if (OPERATOR_CONTROLLER.getPOV() == 180) {
+			manualMode = true;
+			leftMotor.set(-0.75);
+		} else if (!manualMode) {
+			leftMotor.setVoltage(climbPID.calculate(leftMotor.getPosition().getValue().in(Rotations), setpoint));
+		} else {
+			leftMotor.set(0);
+		}
+
+		if (OPERATOR_CONTROLLER.getBackButtonPressed()) {
+			manualMode = false;
+		}
 	}
 }

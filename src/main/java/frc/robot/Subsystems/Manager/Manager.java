@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Robot;
 import frc.robot.Subsystems.Drive.AutoAlign.AutoAlignConstants;
+import frc.robot.Subsystems.Climber.Climber;
 import frc.robot.Subsystems.Drive.Drive;
 import frc.robot.Subsystems.Drive.DriveStates;
 import frc.robot.Subsystems.Hopper.Hopper;
@@ -37,6 +38,7 @@ public class Manager extends Subsystem<ManagerStates> {
 	private Intake intake;
 	private Vision vision;
 	private LEDs leds;
+	private Climber climber;
 
 	private Timer shiftTimer = new Timer();
 	private GameStates[] gameStates = ALLIANCE_WON_AUTONOMOUS;
@@ -68,6 +70,7 @@ public class Manager extends Subsystem<ManagerStates> {
 		intake = Intake.getInstance();
 		vision = Vision.getInstance();
 		leds = LEDs.getInstance();
+		climber = Climber.getInstance();
 
 		// IDLE <---> EXTENDED_IDLE
 		addTrigger(ManagerStates.IDLE, ManagerStates.EXTENDED_IDLE, () -> DRIVER_CONTROLLER.getPOV() == 0);
@@ -131,14 +134,14 @@ public class Manager extends Subsystem<ManagerStates> {
 		addTrigger(ManagerStates.SHOOTING_FIXED, ManagerStates.WINDING_UP_FIXED_SHOT, DRIVER_CONTROLLER::getBButtonPressed);
 
 		// // IDLE <---> EXTENDING_CLIMBER
-		// addTrigger(ManagerStates.IDLE, ManagerStates.EXTENDING_CLIMBER, OPERATOR_CONTROLLER::getRightBumperButtonPressed);
+		addTrigger(ManagerStates.IDLE, ManagerStates.EXTENDING_CLIMBER, OPERATOR_CONTROLLER::getRightBumperButtonPressed);
 
 		// // EXTENDING_CLIMBER <---> RETRACTING_CLIMBER
-		// addTrigger(ManagerStates.EXTENDING_CLIMBER, ManagerStates.RETRACTING_CLIMBER, OPERATOR_CONTROLLER::getLeftBumperButtonPressed);
-		// addTrigger(ManagerStates.RETRACTING_CLIMBER, ManagerStates.EXTENDING_CLIMBER, OPERATOR_CONTROLLER::getLeftBumperButtonPressed);
+		addTrigger(ManagerStates.EXTENDING_CLIMBER, ManagerStates.RETRACTING_CLIMBER, OPERATOR_CONTROLLER::getLeftBumperButtonPressed);
+		addTrigger(ManagerStates.RETRACTING_CLIMBER, ManagerStates.EXTENDING_CLIMBER, OPERATOR_CONTROLLER::getRightBumperButtonPressed);
 
 		// Operator override HoodSnapDown
-		addRunnableTrigger(shooter::toggleTrenchProtection, () -> OPERATOR_CONTROLLER.getPOV() == 180);
+		//addRunnableTrigger(shooter::toggleTrenchProtection, () -> OPERATOR_CONTROLLER.getPOV() == 180);
 
 		addRunnableTrigger(
 			() -> {
@@ -192,6 +195,7 @@ public class Manager extends Subsystem<ManagerStates> {
 		hopper.setState(getState().getHopperState());
 		intake.setState(getState().getIntakeState());
 		leds.setState(getState().getLEDState());
+		climber.setState(getState().getClimberState());
 
 		Tracer.traceFunc("ShooterPeriodic", shooter::periodic);
 		Tracer.traceFunc("HopperPeriodic", hopper::periodic);
@@ -199,6 +203,8 @@ public class Manager extends Subsystem<ManagerStates> {
 		Tracer.traceFunc("DrivePeriodic", drive::periodic);
 		Tracer.traceFunc("VisionPeriodic", vision::periodic);
 		Tracer.traceFunc("LEDPeriodic", leds::periodic);
+		Tracer.traceFunc("ClimberPeriodic", climber::periodic);
+
 		// Emergency stop to IDLE
 		if (DRIVER_CONTROLLER.getStartButton() || OPERATOR_CONTROLLER.getStartButton()) {
 			setState(ManagerStates.EXTENDED_IDLE);

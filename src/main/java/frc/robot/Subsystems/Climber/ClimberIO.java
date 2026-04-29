@@ -9,12 +9,11 @@ public interface ClimberIO {
 
 		public Angle leftPosition = Rotations.of(0);
 		public Angle rightPosition = Rotations.of(0);
-		public Angle setpoint = Rotations.of(0);
+		public double speed = 0;
 	}
 
 	void logOutputs(ClimberIOOutputs outputs);
 
-	void setPosition(Angle position);
+	void setSetpoint(double setpoint);
 
-	boolean atPositionSetpoint();
 }

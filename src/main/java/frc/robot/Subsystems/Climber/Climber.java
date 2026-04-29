@@ -16,7 +16,7 @@ public class Climber extends Subsystem<ClimberStates> {
 		if (instance == null) {
 			switch (GlobalConstants.ROBOT_MODE) {
 				case REAL -> instance = new Climber(new ClimberIOReal());
-				case SIM -> instance = new Climber(new ClimberIOSim());
+				case SIM -> instance = new Climber(new ClimberIOReal());
 				case TESTING -> instance = new Climber(new ClimberIOReal());
 			}
 		}
@@ -24,23 +24,20 @@ public class Climber extends Subsystem<ClimberStates> {
 	}
 
 	private Climber(ClimberIO io) {
-		super(ClimberConstants.SUBSYSTEM_NAME, ClimberStates.IDLE);
+		super(ClimberConstants.SUBSYSTEM_NAME, ClimberStates.RETRACTED);
 		this.io = io;
 		this.outputs = new ClimberIO.ClimberIOOutputs();
 	}
 
 	@Override
 	public void runState() {
-		io.setPosition(getState().getClimberSetpoint());
+		io.setSetpoint(getState().getClimberSpeed());
 		io.logOutputs(outputs);
 
 		Logger.recordOutput(getName() + "/LeftPositionRot", outputs.leftPosition.in(Rotations));
 		Logger.recordOutput(getName() + "/RightPositionRot", outputs.rightPosition.in(Rotations));
-		Logger.recordOutput(getName() + "/SetpointRot", outputs.setpoint.in(Rotations));
+		Logger.recordOutput(getName() + "/SetpointRot", outputs.speed);
 		Logger.recordOutput(getName() + "/state", getState().getStateString());
 	}
 
-	public boolean readyToClimb() {
-		return io.atPositionSetpoint();
-	}
 }

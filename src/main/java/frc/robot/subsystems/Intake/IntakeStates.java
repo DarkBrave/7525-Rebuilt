@@ -8,6 +8,7 @@ import org.team7525.subsystem.SubsystemStates;
 public enum IntakeStates implements SubsystemStates {
 	IN("In", INTAKE_IN_POS, 0),
 	OUT("Out", INTAKE_OUT_POS, 0),
+	CLIMB("Climbing",INTAKE_CLIMB_POS,0),
 	INTAKE("Intake", INTAKE_OUT_POS, SPIN_SPEED_INTAKE);
 
 	private String stateString;
