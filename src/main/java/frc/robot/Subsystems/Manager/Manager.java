@@ -1,8 +1,6 @@
 package frc.robot.Subsystems.Manager;
 
 import static edu.wpi.first.units.Units.Degrees;
-import static edu.wpi.first.units.Units.MetersPerSecond;
-import static edu.wpi.first.units.Units.RotationsPerSecond;
 import static frc.robot.GlobalConstants.Controllers.DRIVER_CONTROLLER;
 import static frc.robot.GlobalConstants.Controllers.OPERATOR_CONTROLLER;
 import static frc.robot.Subsystems.Manager.CurrentLimitConstants.*;
@@ -19,14 +17,12 @@ import frc.robot.Robot;
 import frc.robot.Subsystems.Drive.AutoAlign.AutoAlignConstants;
 import frc.robot.Subsystems.Climber.Climber;
 import frc.robot.Subsystems.Drive.Drive;
-import frc.robot.Subsystems.Drive.DriveStates;
 import frc.robot.Subsystems.Hopper.Hopper;
 import frc.robot.Subsystems.Intake.Intake;
 import frc.robot.Subsystems.LEDs.LEDs;
 import frc.robot.Subsystems.Shooter.Shooter;
 import frc.robot.Subsystems.Vision.Vision;
 import org.littletonrobotics.junction.Logger;
-import org.team7525.misc.Tracer;
 import org.team7525.subsystem.Subsystem;
 
 public class Manager extends Subsystem<ManagerStates> {
@@ -43,7 +39,6 @@ public class Manager extends Subsystem<ManagerStates> {
 	private Timer shiftTimer = new Timer();
 	private GameStates[] gameStates = ALLIANCE_WON_AUTONOMOUS;
 	private GameStates currentGameState = GameStates.UNKNOWN;
-	private int gameStateIndex = 0;
 	private int numTimesYPressed = 0;
 
 	private GameStates nextGameState = GameStates.TRANSITION_SHIFT;
@@ -197,13 +192,20 @@ public class Manager extends Subsystem<ManagerStates> {
 		leds.setState(getState().getLEDState());
 		climber.setState(getState().getClimberState());
 
-		Tracer.traceFunc("ShooterPeriodic", shooter::periodic);
-		Tracer.traceFunc("HopperPeriodic", hopper::periodic);
-		Tracer.traceFunc("IntakePeriodic", intake::periodic);
-		Tracer.traceFunc("DrivePeriodic", drive::periodic);
-		Tracer.traceFunc("VisionPeriodic", vision::periodic);
-		Tracer.traceFunc("LEDPeriodic", leds::periodic);
-		Tracer.traceFunc("ClimberPeriodic", climber::periodic);
+		shooter.periodic();
+		hopper.periodic();
+		intake.periodic();
+		drive.periodic();
+		vision.periodic();
+		
+
+		// Tracer.traceFunc("ShooterPeriodic", shooter::periodic);
+		// Tracer.traceFunc("HopperPeriodic", hopper::periodic);
+		// Tracer.traceFunc("IntakePeriodic", intake::periodic);
+		// Tracer.traceFunc("DrivePeriodic", drive::periodic);
+		// Tracer.traceFunc("VisionPeriodic", vision::periodic);
+		// Tracer.traceFunc("LEDPeriodic", leds::periodic);
+		// Tracer.traceFunc("ClimberPeriodic", climber::periodic);
 
 		// Emergency stop to IDLE
 		if (DRIVER_CONTROLLER.getStartButton() || OPERATOR_CONTROLLER.getStartButton()) {

@@ -24,7 +24,6 @@ import java.util.function.Supplier;
 import org.team7525.autoAlign.RepulsorFieldPlanner.GuidedObstacle;
 import org.team7525.autoAlign.RepulsorFieldPlanner.HorizontalObstacle;
 import org.team7525.autoAlign.RepulsorFieldPlanner.Obstacle;
-import org.team7525.autoAlign.RepulsorFieldPlanner.PointObstacle;
 import org.team7525.autoAlign.RepulsorFieldPlanner.VerticalObstacle;
 
 public final class AutoAlignConstants {
