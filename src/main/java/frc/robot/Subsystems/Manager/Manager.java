@@ -1,8 +1,6 @@
 package frc.robot.Subsystems.Manager;
 
 import static edu.wpi.first.units.Units.Degrees;
-import static edu.wpi.first.units.Units.MetersPerSecond;
-import static edu.wpi.first.units.Units.RotationsPerSecond;
 import static frc.robot.GlobalConstants.Controllers.DRIVER_CONTROLLER;
 import static frc.robot.GlobalConstants.Controllers.OPERATOR_CONTROLLER;
 import static frc.robot.Subsystems.Manager.CurrentLimitConstants.*;
@@ -14,12 +12,10 @@ import static frc.robot.Subsystems.Manager.ManagerStates.WINDING_UP;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Robot;
 import frc.robot.Subsystems.Drive.AutoAlign.AutoAlignConstants;
 import frc.robot.Subsystems.Climber.Climber;
 import frc.robot.Subsystems.Drive.Drive;
-import frc.robot.Subsystems.Drive.DriveStates;
 import frc.robot.Subsystems.Hopper.Hopper;
 import frc.robot.Subsystems.Intake.Intake;
 import frc.robot.Subsystems.LEDs.LEDs;
@@ -43,7 +39,6 @@ public class Manager extends Subsystem<ManagerStates> {
 	private Timer shiftTimer = new Timer();
 	private GameStates[] gameStates = ALLIANCE_WON_AUTONOMOUS;
 	private GameStates currentGameState = GameStates.UNKNOWN;
-	private int gameStateIndex = 0;
 	private int numTimesYPressed = 0;
 
 	private GameStates nextGameState = GameStates.TRANSITION_SHIFT;
@@ -171,7 +166,7 @@ public class Manager extends Subsystem<ManagerStates> {
 		autoWinnerChooser.addOption("Won Auto", ALLIANCE_WON_AUTO);
 		autoWinnerChooser.addOption("Lost Auto", ALLIANCE_LOST_AUTO);
 
-		SmartDashboard.putData("Auto Winner Override", autoWinnerChooser);
+		//SmartDashboard.putData("Auto Winner Override", autoWinnerChooser);
 	}
 
 	@Override
@@ -202,7 +197,6 @@ public class Manager extends Subsystem<ManagerStates> {
 		Tracer.traceFunc("IntakePeriodic", intake::periodic);
 		Tracer.traceFunc("DrivePeriodic", drive::periodic);
 		Tracer.traceFunc("VisionPeriodic", vision::periodic);
-		Tracer.traceFunc("LEDPeriodic", leds::periodic);
 		Tracer.traceFunc("ClimberPeriodic", climber::periodic);
 
 		// Emergency stop to IDLE

@@ -11,8 +11,6 @@ import static frc.robot.GlobalConstants.Controllers.*;
 import static frc.robot.Subsystems.Drive.AutoAlign.AutoAlignConstants.*;
 import static frc.robot.Subsystems.Drive.DriveConstants.*;
 import static frc.robot.Subsystems.Drive.TunerConstants.kSpeedAt12Volts;
-import static frc.robot.Subsystems.Manager.ManagerStates.WINDING_UP;
-
 import choreo.trajectory.SwerveSample;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -35,15 +33,13 @@ import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.smartdashboard.Field2d;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+//import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+//import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.GlobalConstants.Controllers;
 import frc.robot.GlobalConstants.RobotMode;
 import frc.robot.Robot;
-import frc.robot.Subsystems.Drive.AutoAlign.AutoAlignConstants.*;
 import frc.robot.Subsystems.Drive.AutoAlign.MathHelpers;
 import frc.robot.Subsystems.Drive.TunerConstants.TunerSwerveDrivetrain;
-import frc.robot.Subsystems.Manager.GameStates;
 import frc.robot.Subsystems.Manager.Manager;
 import frc.robot.Subsystems.Manager.ManagerStates;
 import java.util.List;
@@ -52,11 +48,8 @@ import org.team7525.autoAlign.RepulsorFieldPlanner;
 import org.team7525.subsystem.Subsystem;
 
 public class Drive extends Subsystem<DriveStates> {
-
 	private static Drive instance;
-
 	private DriveIO driveIO;
-
 	private boolean isFieldRelative;
 	private boolean allowAutoAimlock = false;
 	private boolean robotMirrored = false;
@@ -69,14 +62,13 @@ public class Drive extends Subsystem<DriveStates> {
 
 	private boolean usedRepulsor = false;
 	private final RepulsorFieldPlanner repulsor = new RepulsorFieldPlanner(Obstacles.FIELD_OBSTACLES, Obstacles.WALLS, (ROBOT_MODE == RobotMode.SIM));
-	private final Field2d field = new Field2d();
+	//private final Field2d field = new Field2d();
 
 	private final ProfiledPIDController rotationController;
 	private final ProfiledPIDController translationalController;
 	private final ProfiledPIDController shooterYawController;
 	private final PIDController repulsorTranslationController;
 	private final PIDController repulsorRotationalController;
-	//private final PIDController shooterYawControllerFast;
 	private final PIDController snakeDriveController;
 
 	private final PIDController xController;
@@ -86,7 +78,7 @@ public class Drive extends Subsystem<DriveStates> {
 	private double driveErrorAbs;
 	private double thetaErrorAbs;
 	private double ffMinRadius = 0.2, ffMaxRadius = 1.0;
-	private double aimlockffMinRadius = Units.degreesToRadians(0.5), aimlockffMaxRadius = Units.degreesToRadians(180);
+	private double aimlockffMaxRadius = Units.degreesToRadians(180);
 	private double driveMultiplier = 1;
 
 	private boolean autoAligning = false;
@@ -199,7 +191,6 @@ public class Drive extends Subsystem<DriveStates> {
 	@Override
 	public void runState() {
 		sotmTarget = Robot.isRedAlliance ? RED_HUB_POSE : BLUE_HUB_POSE;
-		SmartDashboard.putData("Shooter CONTROLLER", shooterYawController);
 		if (DriverStation.isDisabled()) robotMirrored = false;
 
 		if (DRIVER_CONTROLLER.getLeftTriggerAxis() > Controllers.TRIGGERS_REGISTER_POINT) driveMultiplier = SLOW_MODE_MULTIPLIER;
@@ -247,7 +238,6 @@ public class Drive extends Subsystem<DriveStates> {
 					thetaVelocity = 0;
 				}
 				Logger.recordOutput(SUBSYSTEM_NAME + "/AIMLOCK THETA VELOCITY", thetaVelocity);
-				SmartDashboard.putData(SUBSYSTEM_NAME + "/PID FOR AIMING", shooterYawController);
 				executeAutoAlignDriveInstruction(-DRIVER_CONTROLLER.getLeftY() * kSpeedAt12Volts.in(MetersPerSecond) * driveMultiplier, -DRIVER_CONTROLLER.getLeftX() * kSpeedAt12Volts.in(MetersPerSecond) * driveMultiplier, thetaVelocity, true);
 				break;
 			case AA_NEUTRAL:
@@ -289,8 +279,8 @@ public class Drive extends Subsystem<DriveStates> {
 				LockXPose();
 				break;
 		}
-		field.setRobotPose(getPose());
-		SmartDashboard.putData("Field", field);
+		//field.setRobotPose(getPose());
+		//SmartDashboard.putData("Field", field);
 
 		//TODO: is this cooked?
 		if (getState().getStateString().contains("AA")) {

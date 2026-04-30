@@ -24,6 +24,8 @@ import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 import org.team7525.misc.CommandsUtil;
 import org.team7525.misc.Tracer;
 
+import com.ctre.phoenix6.SignalLogger;
+
 public class Robot extends LoggedRobot {
 
 	private final AutoChooser autoChooser = new AutoChooser();
@@ -55,8 +57,9 @@ public class Robot extends LoggedRobot {
 		DriverStation.silenceJoystickConnectionWarning(true);
 		RobotController.setBrownoutVoltage(5.5); // This is a sketchy fix. Lowest value is 4.5V, Default is 6.7V.
 		CommandScheduler.getInstance().unregisterAllSubsystems();
-		System.gc();
+		SignalLogger.enableAutoLogging(false);
 		Drive.getInstance().zeroGyro();
+		System.gc();
 
 		// Auto routine chooser setup
 		autoChooser.addRoutine("Right 2 Cycle", autoRoutines::Right2CycleRoutine);
@@ -98,6 +101,7 @@ public class Robot extends LoggedRobot {
 		manager.setState(IDLE);
 		Drive.getInstance().setState(DriveStates.SNAKE_DRIVE);
 		Intake.getInstance().setAllowAutonomousAgitation(false);
+		System.gc();
 	}
 
 	@Override
@@ -114,13 +118,12 @@ public class Robot extends LoggedRobot {
 	@Override
 	public void disabledInit() {
 		System.gc();
-	}
-
-	@Override
-	public void disabledPeriodic() {
 		isRedAlliance = DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red;
 		allianceZone = isRedAlliance ? RED_ALLIANCE_BOUNDS : BLUE_ALLIANCE_BOUNDS;
 	}
+
+	@Override
+	public void disabledPeriodic() {}
 
 	@Override
 	public void disabledExit() {
