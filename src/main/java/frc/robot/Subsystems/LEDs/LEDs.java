@@ -74,6 +74,9 @@ public class LEDs extends Subsystem<LEDStates> {
 			case LOCKED_X_POSE:
 				io.setDrivePattern(X_POSE_PATTERN);
 				break;
+			default:
+				io.setDrivePattern(NORMAL_PATTERN);
+				break;
 		}
 
 		io.setLEDData();

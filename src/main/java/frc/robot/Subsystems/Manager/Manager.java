@@ -9,25 +9,22 @@ import static frc.robot.Subsystems.Manager.ManagerStates.SCORING_AUTO;
 import static frc.robot.Subsystems.Manager.ManagerStates.WINDING_TO_SCORE_AUTO;
 import static frc.robot.Subsystems.Manager.ManagerStates.WINDING_UP;
 
-import java.util.List;
-
+import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Robot;
-import frc.robot.Subsystems.Drive.AutoAlign.AutoAlignConstants;
 import frc.robot.Subsystems.Climber.Climber;
+import frc.robot.Subsystems.Drive.AutoAlign.AutoAlignConstants;
 import frc.robot.Subsystems.Drive.Drive;
 import frc.robot.Subsystems.Hopper.Hopper;
 import frc.robot.Subsystems.Intake.Intake;
 import frc.robot.Subsystems.LEDs.LEDs;
 import frc.robot.Subsystems.Shooter.Shooter;
 import frc.robot.Subsystems.Vision.Vision;
+import java.util.List;
 import org.littletonrobotics.junction.Logger;
 import org.team7525.subsystem.Subsystem;
-
-import com.ctre.phoenix6.hardware.TalonFX;
 
 public class Manager extends Subsystem<ManagerStates> {
 
@@ -173,8 +170,7 @@ public class Manager extends Subsystem<ManagerStates> {
 		autoWinnerChooser.setDefaultOption("Use FMS", USE_FMS);
 		autoWinnerChooser.addOption("Won Auto", ALLIANCE_WON_AUTO);
 		autoWinnerChooser.addOption("Lost Auto", ALLIANCE_LOST_AUTO);
-
-		SmartDashboard.putData("Auto Winner Override", autoWinnerChooser);
+		//SmartDashboard.putData("Auto Winner Override", autoWinnerChooser);
 	}
 
 	@Override
@@ -204,7 +200,6 @@ public class Manager extends Subsystem<ManagerStates> {
 		intake.periodic();
 		drive.periodic();
 		vision.periodic();
-		
 
 		// Tracer.traceFunc("ShooterPeriodic", shooter::periodic);
 		// Tracer.traceFunc("HopperPeriodic", hopper::periodic);
@@ -284,7 +279,6 @@ public class Manager extends Subsystem<ManagerStates> {
 	protected void stateInit() {
 		// Update current limits for drive, turn, and shooter based on the current limiter state of the new manager state
 		if (driveMotors.isEmpty() || turnMotors.isEmpty() || shooterMotors.isEmpty()) {
-
 			driveMotors = drive.getDriveMotors();
 			turnMotors = drive.getTurnMotors();
 			shooterMotors = shooter.getShooterMotors();

@@ -65,6 +65,7 @@ public class AutoCommands {
 	public Command ClimbPrep() {
 		return new InstantCommand(() -> Manager.getInstance().setState(ManagerStates.EXTENDING_CLIMBER));
 	}
+
 	public Command Climb() {
 		return new InstantCommand(() -> Manager.getInstance().setState(ManagerStates.RETRACTING_CLIMBER));
 	}
