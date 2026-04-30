@@ -19,7 +19,7 @@ import frc.robot.Subsystems.Drive.AutoAlign.AutoAlignConstants;
 import frc.robot.Subsystems.Drive.Drive;
 import frc.robot.Subsystems.Hopper.Hopper;
 import frc.robot.Subsystems.Intake.Intake;
-import frc.robot.Subsystems.LEDs.LEDs;
+//import frc.robot.Subsystems.LEDs.LEDs;
 import frc.robot.Subsystems.Shooter.Shooter;
 import frc.robot.Subsystems.Vision.Vision;
 import java.util.List;
@@ -34,7 +34,7 @@ public class Manager extends Subsystem<ManagerStates> {
 	private Hopper hopper;
 	private Intake intake;
 	private Vision vision;
-	private LEDs leds;
+	//private LEDs leds;
 	private Climber climber;
 
 	private Timer shiftTimer = new Timer();
@@ -69,7 +69,7 @@ public class Manager extends Subsystem<ManagerStates> {
 		hopper = Hopper.getInstance();
 		intake = Intake.getInstance();
 		vision = Vision.getInstance();
-		leds = LEDs.getInstance();
+		//leds = LEDs.getInstance();
 		climber = Climber.getInstance();
 
 		// IDLE <---> EXTENDED_IDLE

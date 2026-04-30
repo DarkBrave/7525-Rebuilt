@@ -125,9 +125,6 @@ public class Robot extends LoggedRobot {
 	}
 
 	@Override
-	public void disabledPeriodic() {}
-
-	@Override
 	public void disabledExit() {
 		isDisabled = false;
 		isRedAlliance = DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red;
