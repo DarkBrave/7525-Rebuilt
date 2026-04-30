@@ -16,6 +16,7 @@ import org.littletonrobotics.junction.Logger;
 import org.team7525.subsystem.Subsystem;
 
 public class Shooter extends Subsystem<ShooterStates> {
+
 	private static Shooter instance;
 	private final ShooterIO io;
 	private ShooterIOOutputs outputs;

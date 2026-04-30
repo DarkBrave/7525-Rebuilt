@@ -4,6 +4,7 @@ import static frc.robot.FieldConstants.*;
 import static frc.robot.Subsystems.Manager.ManagerStates.IDLE;
 
 import choreo.auto.AutoChooser;
+import com.ctre.phoenix6.SignalLogger;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -23,8 +24,6 @@ import org.littletonrobotics.junction.networktables.NT4Publisher;
 import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 import org.team7525.misc.CommandsUtil;
 import org.team7525.misc.Tracer;
-
-import com.ctre.phoenix6.SignalLogger;
 
 public class Robot extends LoggedRobot {
 
@@ -82,7 +81,6 @@ public class Robot extends LoggedRobot {
 		CommandScheduler.getInstance().run();
 		Tracer.traceFunc("SubsystemManager", manager::periodic);
 		Tracer.endTrace();
-
 	}
 
 	@Override

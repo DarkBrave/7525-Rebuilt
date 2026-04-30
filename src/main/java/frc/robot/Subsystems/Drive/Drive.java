@@ -11,6 +11,7 @@ import static frc.robot.GlobalConstants.Controllers.*;
 import static frc.robot.Subsystems.Drive.AutoAlign.AutoAlignConstants.*;
 import static frc.robot.Subsystems.Drive.DriveConstants.*;
 import static frc.robot.Subsystems.Drive.TunerConstants.kSpeedAt12Volts;
+
 import choreo.trajectory.SwerveSample;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -48,6 +49,7 @@ import org.team7525.autoAlign.RepulsorFieldPlanner;
 import org.team7525.subsystem.Subsystem;
 
 public class Drive extends Subsystem<DriveStates> {
+
 	private static Drive instance;
 	private DriveIO driveIO;
 	private boolean isFieldRelative;
