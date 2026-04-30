@@ -43,6 +43,25 @@ public class AutoRoutines {
 		);
 		return routine;
 	}
+	public AutoRoutine CenterScorePreloadAndBump() {
+		AutoRoutine routine = autoFactory.newRoutine("CenterScorePreload");
+		AutoTrajectory part1 = ChoreoTraj.CenterScore8.asAutoTraj(routine);
+		AutoTrajectory part2 = ChoreoTraj.RightBump2Cycle.asAutoTraj(routine);
+
+		routine.active().onTrue(Commands.print("AUTO STARTED")
+			.andThen(part1.resetOdometry())
+			.andThen(part1.cmd())
+			.andThen(new WaitCommand(2))
+			.andThen(autoCommands.startScoring())
+			.andThen(autoCommands.enableAgitation())
+			.andThen(new WaitCommand(3.5))
+			.andThen(autoCommands.disableAgitation())
+			.andThen(part2.cmd())
+			.andThen(autoCommands.startScoring())
+			.andThen(autoCommands.enableAgitation())
+		);
+		return routine;
+	}
 	public AutoRoutine CenterScoreDepot() {
 		AutoRoutine routine = autoFactory.newRoutine("CenterScoreDepot");
 		AutoTrajectory part1 = ChoreoTraj.CenterDepot.asAutoTraj(routine);

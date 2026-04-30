@@ -129,6 +129,13 @@ public record ChoreoTraj(
         new Pose2d(2.52135, 7.23333, Rotation2d.fromRadians(-2.49972)),
         new Pose2d(2.52135, 7.23333, Rotation2d.fromRadians(-2.61319))
     );
+    public static final ChoreoTraj RightBump2Cycle = new ChoreoTraj(
+        "RightBump2Cycle",
+        OptionalInt.empty(),
+        6.79898,
+        new Pose2d(1.90294, 3.82433, Rotation2d.fromRadians(-1.5708)),
+        new Pose2d(1.90294, 3.82433, Rotation2d.fromRadians(-1.5708))
+    );
 
     /**
      * A map between trajectory names and their corresponding data.
@@ -149,7 +156,8 @@ public record ChoreoTraj(
         Map.entry("SweeperLeft1Cycle_P1", SweeperLeft1Cycle_P1),
         Map.entry("SweeperLeft1Cycle_P2", SweeperLeft1Cycle_P2),
         Map.entry("SweeperRight1Cycle_P1", SweeperRight1Cycle_P1),
-        Map.entry("SweeperRight1Cycle_P2", SweeperRight1Cycle_P2)
+        Map.entry("SweeperRight1Cycle_P2", SweeperRight1Cycle_P2),
+        Map.entry("RightBump2Cycle", RightBump2Cycle)
     );
 
     /**

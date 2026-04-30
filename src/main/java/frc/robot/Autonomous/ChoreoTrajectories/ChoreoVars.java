@@ -17,6 +17,7 @@ public final class ChoreoVars {
     public static final double UpperAvoidY = 5.720746;
 
     public static final class Poses {
+        public static final Pose2d CenterShoot = new Pose2d(1.90294, 3.8243306, Rotation2d.fromRadians(-1.5707963));
         public static final Pose2d LeftAllianceTrenchStraighten = new Pose2d(3.869765, 7.518828, Rotation2d.fromRadians(3.1415927));
         public static final Pose2d LeftNeutralTrenchStraighten = new Pose2d(5.3970543, 7.518828, Rotation2d.fromRadians(0));
         public static final Pose2d LeftStartingPos = new Pose2d(3.5847323, 7.518828, Rotation2d.fromRadians(0));
