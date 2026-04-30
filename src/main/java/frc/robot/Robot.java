@@ -80,7 +80,6 @@ public class Robot extends LoggedRobot {
 		Tracer.traceFunc("SubsystemManager", manager::periodic);
 		Tracer.endTrace();
 
-		isDisabled = isDisabled(); //TODO: This might cook runtime if run every loop?
 	}
 
 	@Override
@@ -114,6 +113,7 @@ public class Robot extends LoggedRobot {
 	@Override
 	public void disabledInit() {
 		System.gc();
+		isDisabled = true;
 	}
 
 	@Override
@@ -124,6 +124,7 @@ public class Robot extends LoggedRobot {
 
 	@Override
 	public void disabledExit() {
+		isDisabled = false;
 		isRedAlliance = DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red;
 	}
 }

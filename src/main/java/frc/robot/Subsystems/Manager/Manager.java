@@ -189,7 +189,6 @@ public class Manager extends Subsystem<ManagerStates> {
 		shooter.setState(getState().getShooterState());
 		hopper.setState(getState().getHopperState());
 		intake.setState(getState().getIntakeState());
-		leds.setState(getState().getLEDState());
 		climber.setState(getState().getClimberState());
 
 		shooter.periodic();
