@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.robot.Robot;
-import frc.robot.Subsystems.Climber.Climber;
+//import frc.robot.Subsystems.Climber.Climber;
 import frc.robot.Subsystems.Drive.AutoAlign.AutoAlignConstants;
 import frc.robot.Subsystems.Drive.Drive;
 import frc.robot.Subsystems.Hopper.Hopper;
@@ -35,7 +35,7 @@ public class Manager extends Subsystem<ManagerStates> {
 	private Intake intake;
 	private Vision vision;
 	//private LEDs leds;
-	private Climber climber;
+	//private Climber climber;
 
 	private Timer shiftTimer = new Timer();
 	private GameStates[] gameStates = ALLIANCE_WON_AUTONOMOUS;
@@ -70,7 +70,7 @@ public class Manager extends Subsystem<ManagerStates> {
 		intake = Intake.getInstance();
 		vision = Vision.getInstance();
 		//leds = LEDs.getInstance();
-		climber = Climber.getInstance();
+		//climber = Climber.getInstance();
 
 		// IDLE <---> EXTENDED_IDLE
 		addTrigger(ManagerStates.IDLE, ManagerStates.EXTENDED_IDLE, () -> DRIVER_CONTROLLER.getPOV() == 0);
@@ -193,7 +193,7 @@ public class Manager extends Subsystem<ManagerStates> {
 		shooter.setState(getState().getShooterState());
 		hopper.setState(getState().getHopperState());
 		intake.setState(getState().getIntakeState());
-		climber.setState(getState().getClimberState());
+		//climber.setState(getState().getClimberState());
 
 		shooter.periodic();
 		hopper.periodic();
