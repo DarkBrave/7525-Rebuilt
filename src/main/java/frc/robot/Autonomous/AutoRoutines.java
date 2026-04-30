@@ -48,6 +48,7 @@ public class AutoRoutines {
 		AutoTrajectory part1 = ChoreoTraj.CenterDepot.asAutoTraj(routine);
 
 		routine.active().onTrue(Commands.print("AUTO STARTED")
+			.andThen(autoCommands.intake())
 			.andThen(part1.resetOdometry())
 			.andThen(part1.cmd())
 			.andThen(autoCommands.startScoring())
