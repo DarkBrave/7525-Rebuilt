@@ -56,7 +56,11 @@ public class Vision extends Subsystem<VisionStates> {
 					*/
 
 					case REAL -> new VisionIO[] { new VisionIOPhotonVision(BACK_LEFT_CAMERA_NAME, ROBOT_TO_BACK_LEFT_CAMERA), new VisionIOPhotonVision(BACK_RIGHT_CAMERA, ROBOT_TO_BACK_RIGHT_CAMERA), new VisionIOPhotonVision(SHOOTER_CAMERA, ROBOT_TO_SHOOTER_CAMERA) };
-					case SIM -> new VisionIO[] { new VisionIOPhotonVisionSim(BACK_LEFT_CAMERA_NAME, ROBOT_TO_BACK_LEFT_CAMERA, Drive.getInstance()::getPose), new VisionIOPhotonVisionSim(BACK_RIGHT_CAMERA, ROBOT_TO_BACK_RIGHT_CAMERA, Drive.getInstance()::getPose), new VisionIOPhotonVisionSim(SHOOTER_CAMERA, ROBOT_TO_SHOOTER_CAMERA, Drive.getInstance()::getPose)  };
+					case SIM -> new VisionIO[] {
+						new VisionIOPhotonVisionSim(BACK_LEFT_CAMERA_NAME, ROBOT_TO_BACK_LEFT_CAMERA, Drive.getInstance()::getPose),
+						new VisionIOPhotonVisionSim(BACK_RIGHT_CAMERA, ROBOT_TO_BACK_RIGHT_CAMERA, Drive.getInstance()::getPose),
+						new VisionIOPhotonVisionSim(SHOOTER_CAMERA, ROBOT_TO_SHOOTER_CAMERA, Drive.getInstance()::getPose),
+					};
 					case TESTING -> new VisionIO[] { new VisionIOPhotonVision(BACK_LEFT_CAMERA_NAME, ROBOT_TO_BACK_LEFT_CAMERA), new VisionIOPhotonVision(BACK_RIGHT_CAMERA, ROBOT_TO_BACK_RIGHT_CAMERA) };
 				}
 			);
@@ -257,7 +261,7 @@ public class Vision extends Subsystem<VisionStates> {
 	}
 
 	private VisionStates decideVisionState() {
-		if (Manager.getInstance().getState() == ManagerStates.WINDING_UP && Drive.getInstance().isInTeamAllianceZone() || Manager.getInstance().getState() == ManagerStates.SHOOTING_HUB) return VisionStates.IGNORE_BL_BR;
+		if ((Manager.getInstance().getState() == ManagerStates.WINDING_UP && Drive.getInstance().isInTeamAllianceZone()) || Manager.getInstance().getState() == ManagerStates.SHOOTING_HUB) return VisionStates.IGNORE_BL_BR;
 
 		if (Drive.getInstance().isInTeamAllianceZone()) {
 			if (Drive.getInstance().getPose().getY() > AutoAlignConstants.FIELD_WIDTH / 2) {

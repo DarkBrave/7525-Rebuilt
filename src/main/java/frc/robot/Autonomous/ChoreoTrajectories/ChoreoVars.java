@@ -1,9 +1,7 @@
-// spotless:off
 package frc.robot.Autonomous.ChoreoTrajectories;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.units.Units;
-import edu.wpi.first.units.measure.*;
 
 /**
  * Generated file containing variables defined in Choreo.
@@ -11,10 +9,10 @@ import edu.wpi.first.units.measure.*;
  * in the Choreo GUI.
  */
 public final class ChoreoVars {
-    public static final double AvoidRadius = 1.3182698;
-    public static final double AvoidX = 4.6032339;
-    public static final double LowerAvoidY = 2.349254;
-    public static final double UpperAvoidY = 5.720746;
+    public static final double AvoidRadius = 1.318;
+    public static final double AvoidX = 4.603;
+    public static final double LowerAvoidY = 2.349;
+    public static final double UpperAvoidY = 5.721;
 
     public static final class Poses {
         public static final Pose2d CenterShoot = new Pose2d(1.90294, 3.8243306, Rotation2d.fromRadians(-1.5707963));

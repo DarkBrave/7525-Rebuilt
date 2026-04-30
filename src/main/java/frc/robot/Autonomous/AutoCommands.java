@@ -7,7 +7,6 @@ import frc.robot.Subsystems.Drive.Drive;
 import frc.robot.Subsystems.Intake.Intake;
 import frc.robot.Subsystems.Manager.Manager;
 import frc.robot.Subsystems.Manager.ManagerStates;
-import frc.robot.Subsystems.Shooter.Shooter;
 
 public class AutoCommands {
 
@@ -66,6 +65,7 @@ public class AutoCommands {
 	public Command ClimbPrep() {
 		return new InstantCommand(() -> Manager.getInstance().setState(ManagerStates.EXTENDING_CLIMBER));
 	}
+
 	public Command Climb() {
 		return new InstantCommand(() -> Manager.getInstance().setState(ManagerStates.RETRACTING_CLIMBER));
 	}

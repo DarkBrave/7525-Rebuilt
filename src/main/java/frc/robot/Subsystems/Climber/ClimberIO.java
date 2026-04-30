@@ -15,5 +15,4 @@ public interface ClimberIO {
 	void logOutputs(ClimberIOOutputs outputs);
 
 	void setSetpoint(double setpoint);
-
 }

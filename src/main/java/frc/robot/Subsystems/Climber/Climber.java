@@ -39,5 +39,4 @@ public class Climber extends Subsystem<ClimberStates> {
 		Logger.recordOutput(getName() + "/SetpointRot", outputs.speed);
 		Logger.recordOutput(getName() + "/state", getState().getStateString());
 	}
-
 }

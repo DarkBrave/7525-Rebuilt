@@ -9,7 +9,6 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Subsystems.Intake.IntakeConstants.Real;
 
 public class IntakeIOTalonFX implements IntakeIO {
@@ -45,7 +44,6 @@ public class IntakeIOTalonFX implements IntakeIO {
 		outputs.angularPosition = Rotations.of(pivotMotor.getPosition().getValueAsDouble() / GEARING);
 		outputs.angularSetpoint = setpoint;
 		outputs.pivotCurrentAmps = pivotMotor.getSupplyCurrent().getValue();
-		SmartDashboard.putData("PIVOT_CONTROLLER", pivotController);
 	}
 
 	@Override

@@ -4,6 +4,7 @@ import static frc.robot.FieldConstants.*;
 import static frc.robot.Subsystems.Manager.ManagerStates.IDLE;
 
 import choreo.auto.AutoChooser;
+import com.ctre.phoenix6.SignalLogger;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -55,8 +56,9 @@ public class Robot extends LoggedRobot {
 		DriverStation.silenceJoystickConnectionWarning(true);
 		RobotController.setBrownoutVoltage(5.5); // This is a sketchy fix. Lowest value is 4.5V, Default is 6.7V.
 		CommandScheduler.getInstance().unregisterAllSubsystems();
-		System.gc();
+		SignalLogger.enableAutoLogging(false);
 		Drive.getInstance().zeroGyro();
+		System.gc();
 
 		// Auto routine chooser setup
 		autoChooser.addRoutine("Right 2 Cycle", autoRoutines::Right2CycleRoutine);
@@ -79,8 +81,6 @@ public class Robot extends LoggedRobot {
 		CommandScheduler.getInstance().run();
 		Tracer.traceFunc("SubsystemManager", manager::periodic);
 		Tracer.endTrace();
-
-		isDisabled = isDisabled(); //TODO: This might cook runtime if run every loop?
 	}
 
 	@Override
@@ -98,6 +98,7 @@ public class Robot extends LoggedRobot {
 		manager.setState(IDLE);
 		Drive.getInstance().setState(DriveStates.SNAKE_DRIVE);
 		Intake.getInstance().setAllowAutonomousAgitation(false);
+		System.gc();
 	}
 
 	@Override
@@ -114,6 +115,7 @@ public class Robot extends LoggedRobot {
 	@Override
 	public void disabledInit() {
 		System.gc();
+		isDisabled = true;
 	}
 
 	@Override
@@ -123,7 +125,11 @@ public class Robot extends LoggedRobot {
 	}
 
 	@Override
+	public void disabledPeriodic() {}
+
+	@Override
 	public void disabledExit() {
+		isDisabled = false;
 		isRedAlliance = DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red;
 	}
 }

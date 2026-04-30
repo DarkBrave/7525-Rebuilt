@@ -1,8 +1,6 @@
 package frc.robot.Subsystems.Manager;
 
 import static edu.wpi.first.units.Units.Degrees;
-import static edu.wpi.first.units.Units.MetersPerSecond;
-import static edu.wpi.first.units.Units.RotationsPerSecond;
 import static frc.robot.GlobalConstants.Controllers.DRIVER_CONTROLLER;
 import static frc.robot.GlobalConstants.Controllers.OPERATOR_CONTROLLER;
 import static frc.robot.Subsystems.Manager.CurrentLimitConstants.*;
@@ -11,22 +9,21 @@ import static frc.robot.Subsystems.Manager.ManagerStates.SCORING_AUTO;
 import static frc.robot.Subsystems.Manager.ManagerStates.WINDING_TO_SCORE_AUTO;
 import static frc.robot.Subsystems.Manager.ManagerStates.WINDING_UP;
 
+import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Robot;
-import frc.robot.Subsystems.Drive.AutoAlign.AutoAlignConstants;
 import frc.robot.Subsystems.Climber.Climber;
+import frc.robot.Subsystems.Drive.AutoAlign.AutoAlignConstants;
 import frc.robot.Subsystems.Drive.Drive;
-import frc.robot.Subsystems.Drive.DriveStates;
 import frc.robot.Subsystems.Hopper.Hopper;
 import frc.robot.Subsystems.Intake.Intake;
 import frc.robot.Subsystems.LEDs.LEDs;
 import frc.robot.Subsystems.Shooter.Shooter;
 import frc.robot.Subsystems.Vision.Vision;
+import java.util.List;
 import org.littletonrobotics.junction.Logger;
-import org.team7525.misc.Tracer;
 import org.team7525.subsystem.Subsystem;
 
 public class Manager extends Subsystem<ManagerStates> {
@@ -43,7 +40,6 @@ public class Manager extends Subsystem<ManagerStates> {
 	private Timer shiftTimer = new Timer();
 	private GameStates[] gameStates = ALLIANCE_WON_AUTONOMOUS;
 	private GameStates currentGameState = GameStates.UNKNOWN;
-	private int gameStateIndex = 0;
 	private int numTimesYPressed = 0;
 
 	private GameStates nextGameState = GameStates.TRANSITION_SHIFT;
@@ -53,6 +49,10 @@ public class Manager extends Subsystem<ManagerStates> {
 	private static final String ALLIANCE_WON_AUTO = "WON";
 	private static final String ALLIANCE_LOST_AUTO = "LOST";
 	private SendableChooser<String> autoWinnerChooser = new SendableChooser<>();
+
+	private List<TalonFX> driveMotors = List.of();
+	private List<TalonFX> turnMotors = List.of();
+	private List<TalonFX> shooterMotors = List.of();
 
 	public static Manager getInstance() {
 		if (instance == null) {
@@ -170,8 +170,7 @@ public class Manager extends Subsystem<ManagerStates> {
 		autoWinnerChooser.setDefaultOption("Use FMS", USE_FMS);
 		autoWinnerChooser.addOption("Won Auto", ALLIANCE_WON_AUTO);
 		autoWinnerChooser.addOption("Lost Auto", ALLIANCE_LOST_AUTO);
-
-		SmartDashboard.putData("Auto Winner Override", autoWinnerChooser);
+		//SmartDashboard.putData("Auto Winner Override", autoWinnerChooser);
 	}
 
 	@Override
@@ -194,16 +193,21 @@ public class Manager extends Subsystem<ManagerStates> {
 		shooter.setState(getState().getShooterState());
 		hopper.setState(getState().getHopperState());
 		intake.setState(getState().getIntakeState());
-		leds.setState(getState().getLEDState());
 		climber.setState(getState().getClimberState());
 
-		Tracer.traceFunc("ShooterPeriodic", shooter::periodic);
-		Tracer.traceFunc("HopperPeriodic", hopper::periodic);
-		Tracer.traceFunc("IntakePeriodic", intake::periodic);
-		Tracer.traceFunc("DrivePeriodic", drive::periodic);
-		Tracer.traceFunc("VisionPeriodic", vision::periodic);
-		Tracer.traceFunc("LEDPeriodic", leds::periodic);
-		Tracer.traceFunc("ClimberPeriodic", climber::periodic);
+		shooter.periodic();
+		hopper.periodic();
+		intake.periodic();
+		drive.periodic();
+		vision.periodic();
+
+		// Tracer.traceFunc("ShooterPeriodic", shooter::periodic);
+		// Tracer.traceFunc("HopperPeriodic", hopper::periodic);
+		// Tracer.traceFunc("IntakePeriodic", intake::periodic);
+		// Tracer.traceFunc("DrivePeriodic", drive::periodic);
+		// Tracer.traceFunc("VisionPeriodic", vision::periodic);
+		// Tracer.traceFunc("LEDPeriodic", leds::periodic);
+		// Tracer.traceFunc("ClimberPeriodic", climber::periodic);
 
 		// Emergency stop to IDLE
 		if (DRIVER_CONTROLLER.getStartButton() || OPERATOR_CONTROLLER.getStartButton()) {
@@ -274,9 +278,14 @@ public class Manager extends Subsystem<ManagerStates> {
 	@Override
 	protected void stateInit() {
 		// Update current limits for drive, turn, and shooter based on the current limiter state of the new manager state
-		drive.getDriveMotors().forEach(motor -> motor.getConfigurator().apply(getState().getCurrentLimiterState().getDriveLimit()));
-		drive.getTurnMotors().forEach(motor -> motor.getConfigurator().apply(getState().getCurrentLimiterState().getTurnLimit()));
-		shooter.getShooterMotors().forEach(motor -> motor.getConfigurator().apply(getState().getCurrentLimiterState().getShooterLimit()));
+		if (driveMotors.isEmpty() || turnMotors.isEmpty() || shooterMotors.isEmpty()) {
+			driveMotors = drive.getDriveMotors();
+			turnMotors = drive.getTurnMotors();
+			shooterMotors = shooter.getShooterMotors();
+		}
+		driveMotors.forEach(motor -> motor.getConfigurator().apply(getState().getCurrentLimiterState().getDriveLimit()));
+		turnMotors.forEach(motor -> motor.getConfigurator().apply(getState().getCurrentLimiterState().getTurnLimit()));
+		shooterMotors.forEach(motor -> motor.getConfigurator().apply(getState().getCurrentLimiterState().getShooterLimit()));
 	}
 
 	@Override
