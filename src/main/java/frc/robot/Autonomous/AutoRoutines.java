@@ -125,6 +125,32 @@ public class AutoRoutines {
 		return routine;
 	}
 
+	public AutoRoutine LeftDelayedSweepHub() {
+		AutoRoutine routine = autoFactory.newRoutine("LeftDelayedSweepHubRoutine");
+		AutoTrajectory part1 = ChoreoTraj.LeftDelayedSweepHub_P1.asAutoTraj(routine);
+		AutoTrajectory part2 = ChoreoTraj.LeftDelayedSweepHub_P2.asAutoTraj(routine);
+		AutoTrajectory part3 = ChoreoTraj.Left2Cycle_P3.asAutoTraj(routine);
+
+		routine.active().onTrue(
+			Commands.print("AUTO STARTED")
+			.andThen(part1.resetOdometry())
+			.andThen(new WaitCommand(5))
+			.andThen(part1.cmd())
+			.andThen(new WaitCommand(2))
+			.andThen(autoCommands.enableAgitation())
+			.andThen(new WaitCommand(2))
+			.andThen(autoCommands.disableAgitation())
+			.andThen(part2.cmd())
+			.andThen(new WaitCommand(2))
+			.andThen(autoCommands.enableAgitation())
+			.andThen(new WaitCommand(2))
+			.andThen(autoCommands.disableAgitation())
+			.andThen(part3.cmd())
+		);
+
+		return routine;
+	}
+
 	public AutoRoutine sweeperRight1Cycle() {
 		AutoRoutine routine = autoFactory.newRoutine("SweeperRight1Cycle");
 		AutoTrajectory part1 = ChoreoTraj.SweeperRight1Cycle_P1.asAutoTraj(routine);

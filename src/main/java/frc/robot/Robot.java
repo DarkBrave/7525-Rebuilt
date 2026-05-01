@@ -63,6 +63,7 @@ public class Robot extends LoggedRobot {
 		autoChooser.addRoutine("Left 2 Cycle", autoRoutines::Left2CycleRoutine);
 		autoChooser.addRoutine("Right Sweeper 1 Cycle", autoRoutines::sweeperRight1Cycle);
 		autoChooser.addRoutine("left Sweeper 1 Cycle", autoRoutines::sweeperLeft1Cycle);
+		autoChooser.addRoutine("Left Delayed Sweep Hub", autoRoutines::LeftDelayedSweepHub);
 		autoChooser.addRoutine("Right 1 Cycle Depot", autoRoutines::right1CycleDepot);
 		autoChooser.addRoutine("Drive Straight", autoRoutines::driveStraight);
 		autoChooser.addRoutine("Center Scire Preload", autoRoutines::CenterScorePreload);

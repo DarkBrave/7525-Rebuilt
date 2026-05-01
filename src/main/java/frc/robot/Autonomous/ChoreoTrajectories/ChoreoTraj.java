@@ -129,6 +129,20 @@ public record ChoreoTraj(
 	    new Pose2d(2.521, 7.233, Rotation2d.fromRadians(-2.5)),
 	    new Pose2d(2.521, 7.233, Rotation2d.fromRadians(-2.613))
 	);
+	public static final ChoreoTraj LeftDelayedSweepHub_P1 = new ChoreoTraj(
+	    "LeftDelayedSweepHub_P1",
+	    OptionalInt.empty(),
+	    7.46528,
+	    new Pose2d(3.585, 7.519, Rotation2d.fromRadians(0)),
+	    new Pose2d(2.521, 7.233, Rotation2d.fromRadians(-2.613))
+	);
+	public static final ChoreoTraj LeftDelayedSweepHub_P2 = new ChoreoTraj(
+	    "LeftDelayedSweepHub_P2",
+	    OptionalInt.empty(),
+	    7.81574,
+	    new Pose2d(2.521, 7.233, Rotation2d.fromRadians(-2.613)),
+	    new Pose2d(2.521, 7.233, Rotation2d.fromRadians(-2.613))
+	);
 
     /**
      * A map between trajectory names and their corresponding data.
@@ -149,7 +163,9 @@ public record ChoreoTraj(
 		Map.entry("SweeperLeft1Cycle_P1", SweeperLeft1Cycle_P1),
 		Map.entry("SweeperLeft1Cycle_P2", SweeperLeft1Cycle_P2),
 		Map.entry("SweeperRight1Cycle_P1", SweeperRight1Cycle_P1),
-		Map.entry("SweeperRight1Cycle_P2", SweeperRight1Cycle_P2)
+		Map.entry("SweeperRight1Cycle_P2", SweeperRight1Cycle_P2),
+		Map.entry("LeftDelayedSweepHub_P1", LeftDelayedSweepHub_P1),
+		Map.entry("LeftDelayedSweepHub_P2", LeftDelayedSweepHub_P2)
     );
 
     /**
