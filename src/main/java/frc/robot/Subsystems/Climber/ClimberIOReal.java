@@ -5,9 +5,7 @@ import static frc.robot.GlobalConstants.Controllers.OPERATOR_CONTROLLER;
 
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-
 import edu.wpi.first.math.controller.PIDController;
-
 import org.littletonrobotics.junction.Logger;
 
 public class ClimberIOReal implements ClimberIO {
@@ -35,7 +33,6 @@ public class ClimberIOReal implements ClimberIO {
 		Logger.recordOutput(ClimberConstants.SUBSYSTEM_NAME + "/LeftPositionRot", outputs.leftPosition.in(Rotations));
 		Logger.recordOutput(ClimberConstants.SUBSYSTEM_NAME + "/SetpointRot", outputs.speed);
 	}
-
 
 	public void setSetpoint(double setpoint) {
 		motorSpeed = setpoint;

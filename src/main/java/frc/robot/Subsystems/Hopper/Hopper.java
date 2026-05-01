@@ -3,7 +3,6 @@ package frc.robot.Subsystems.Hopper;
 import static frc.robot.GlobalConstants.ROBOT_MODE;
 
 import com.ctre.phoenix6.hardware.TalonFX;
-
 import frc.robot.GlobalConstants;
 import frc.robot.GlobalConstants.Controllers;
 import frc.robot.Subsystems.Hopper.HopperIO.HopperIOOutputs;
@@ -50,7 +49,9 @@ public class Hopper extends Subsystem<HopperStates> {
 		io.setTargetSpinVelocity(getState().getSpinVelocity());
 		if (!(GlobalConstants.Controllers.OPERATOR_CONTROLLER.getLeftTriggerAxis() > Controllers.TRIGGERS_REGISTER_POINT)) {
 			io.setTargetKickerVelocity(getState().getKickVelocity());
-		} else { io.setTargetKickerVelocity(-getState().getKickVelocity());}
+		} else {
+			io.setTargetKickerVelocity(-getState().getKickVelocity());
+		}
 		io.updateOutputs(outputs);
 
 		Logger.recordOutput(HopperConstants.SUBSYSTEM_NAME + "/SpinVelocityRPS", outputs.spinVelocityRPS);

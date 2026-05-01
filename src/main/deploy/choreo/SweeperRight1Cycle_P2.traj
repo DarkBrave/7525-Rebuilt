@@ -243,5 +243,6 @@
    {"name":"Intake", "from":{"target":0, "targetTimestamp":0.0, "offset":{"exp":"5.1 s", "val":5.1}}, "event":null},
    {"name":"Wind To Score", "from":{"target":2, "targetTimestamp":2.51494, "offset":{"exp":"0 s", "val":0.0}}, "event":null},
    {"name":"StopRobot", "from":{"target":4, "targetTimestamp":4.9822, "offset":{"exp":"0 s", "val":0.0}}, "event":null},
-   {"name":"Start Scoring", "from":{"target":4, "targetTimestamp":4.9822, "offset":{"exp":"0 s", "val":0.0}}, "event":null}]
+   {"name":"Start Scoring", "from":{"target":4, "targetTimestamp":4.9822, "offset":{"exp":"0 s", "val":0.0}}, "event":null},
+   {"name":"Marker", "from":{"target":4, "targetTimestamp":null, "offset":{"exp":"0 s", "val":0.0}}, "event":null}]
 }
