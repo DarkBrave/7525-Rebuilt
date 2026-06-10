@@ -211,8 +211,8 @@ public class Drive extends Subsystem<DriveStates> {
 		switch (getState()) {
 			case NORMAL:
 				executeDriveInstruction(
-					-DRIVER_CONTROLLER.getLeftY() * kSpeedAt12Volts.in(MetersPerSecond) * driveMultiplier,
-					-DRIVER_CONTROLLER.getLeftX() * kSpeedAt12Volts.in(MetersPerSecond) * driveMultiplier,
+					-DRIVER_CONTROLLER.getLeftY() * kSpeedAt12Volts.in(MetersPerSecond) * driveMultiplier * 0.35,
+					-DRIVER_CONTROLLER.getLeftX() * kSpeedAt12Volts.in(MetersPerSecond) * driveMultiplier * 0.35,
 					-DRIVER_CONTROLLER.getRightX() * ANGULAR_VELOCITY_LIMIT.in(RadiansPerSecond) * 0.1,
 					isFieldRelative
 				);
@@ -222,45 +222,47 @@ public class Drive extends Subsystem<DriveStates> {
 			case AIMLOCK_ALLIANCE_RIGHT_DEEP:
 			case AIMLOCK_ALLIANCE_RIGHT_SHALLOW:
 			case AIMLOCK_HUB:
-				Pose2d target = sotmTarget;
-				Pose2d shooterPosition = getPose().plus(new Transform2d(ROBOT_TO_SHOOTER.getTranslation().toTranslation2d(), ROBOT_TO_SHOOTER.getRotation().toRotation2d()));
-				Pose2d shooterToTarget = target.relativeTo(shooterPosition);
-				shooterToTargetAngle = shooterToTarget.getRotation().getDegrees();
-				// Calculate rotation velocity with PID and FF scaling
-				double currentDistance = shooterToTarget.getTranslation().getAngle().getRadians();
-				Logger.recordOutput(SUBSYSTEM_NAME + "/MAGIC FF CURRENT DISTANCE", currentDistance);
-				double ffScaler = MathUtil.clamp((currentDistance) / (aimlockffMaxRadius), -1.0, 1.0);
-				Logger.recordOutput(SUBSYSTEM_NAME + "/MAGIC FF CALC VALUE", ffScaler);
-				Logger.recordOutput(SUBSYSTEM_NAME + "/SETPOINT VELOCITY", shooterYawController.getSetpoint().velocity);
-				Logger.recordOutput(SUBSYSTEM_NAME + "/SHOOTER YAW ERROR", shooterToTarget.getTranslation().getAngle().getRadians());
-				Logger.recordOutput(SUBSYSTEM_NAME + "/SHOOTER YAW CALC", shooterYawController.calculate(shooterToTarget.getTranslation().getAngle().getRadians(), Math.PI));
-				double thetaVelocity = MAX_ANGULAR_VELOCITY.in(RadiansPerSecond) * ffScaler + shooterYawController.calculate(shooterToTarget.getTranslation().getAngle().getRadians(), Math.PI);
-				thetaErrorAbs = Math.abs(shooterToTarget.getTranslation().getAngle().getRadians());
-				if (thetaErrorAbs < Units.degreesToRadians(1)) {
-					thetaVelocity = 0;
-				}
-				Logger.recordOutput(SUBSYSTEM_NAME + "/AIMLOCK THETA VELOCITY", thetaVelocity);
-				executeAutoAlignDriveInstruction(-DRIVER_CONTROLLER.getLeftY() * kSpeedAt12Volts.in(MetersPerSecond) * driveMultiplier, -DRIVER_CONTROLLER.getLeftX() * kSpeedAt12Volts.in(MetersPerSecond) * driveMultiplier, thetaVelocity, true);
+				setState(DriveStates.NORMAL);
+				// Pose2d target = sotmTarget;
+				// Pose2d shooterPosition = getPose().plus(new Transform2d(ROBOT_TO_SHOOTER.getTranslation().toTranslation2d(), ROBOT_TO_SHOOTER.getRotation().toRotation2d()));
+				// Pose2d shooterToTarget = target.relativeTo(shooterPosition);
+				// shooterToTargetAngle = shooterToTarget.getRotation().getDegrees();
+				// // Calculate rotation velocity with PID and FF scaling
+				// double currentDistance = shooterToTarget.getTranslation().getAngle().getRadians();
+				// Logger.recordOutput(SUBSYSTEM_NAME + "/MAGIC FF CURRENT DISTANCE", currentDistance);
+				// double ffScaler = MathUtil.clamp((currentDistance) / (aimlockffMaxRadius), -1.0, 1.0);
+				// Logger.recordOutput(SUBSYSTEM_NAME + "/MAGIC FF CALC VALUE", ffScaler);
+				// Logger.recordOutput(SUBSYSTEM_NAME + "/SETPOINT VELOCITY", shooterYawController.getSetpoint().velocity);
+				// Logger.recordOutput(SUBSYSTEM_NAME + "/SHOOTER YAW ERROR", shooterToTarget.getTranslation().getAngle().getRadians());
+				// Logger.recordOutput(SUBSYSTEM_NAME + "/SHOOTER YAW CALC", shooterYawController.calculate(shooterToTarget.getTranslation().getAngle().getRadians(), Math.PI));
+				// double thetaVelocity = MAX_ANGULAR_VELOCITY.in(RadiansPerSecond) * ffScaler + shooterYawController.calculate(shooterToTarget.getTranslation().getAngle().getRadians(), Math.PI);
+				// thetaErrorAbs = Math.abs(shooterToTarget.getTranslation().getAngle().getRadians());
+				// if (thetaErrorAbs < Units.degreesToRadians(1)) {
+				// 	thetaVelocity = 0;
+				// }
+				// Logger.recordOutput(SUBSYSTEM_NAME + "/AIMLOCK THETA VELOCITY", thetaVelocity);
+				// executeAutoAlignDriveInstruction(-DRIVER_CONTROLLER.getLeftY() * kSpeedAt12Volts.in(MetersPerSecond) * driveMultiplier, -DRIVER_CONTROLLER.getLeftX() * kSpeedAt12Volts.in(MetersPerSecond) * driveMultiplier, thetaVelocity, true);
 				break;
 			case AA_NEUTRAL:
 			case AA_OUTSIDE_TRENCH_LEFT:
 			case AA_OUTSIDE_TRENCH_RIGHT:
 			case AA_TRENCH_LEFT:
 			case AA_TRENCH_RIGHT:
-				targetPose = Robot.isRedAlliance ? getState().getTargetPosePair().getRedPose() : getState().getTargetPosePair().getBluePose();
+				setState(DriveStates.NORMAL);
+				// targetPose = Robot.isRedAlliance ? getState().getTargetPosePair().getRedPose() : getState().getTargetPosePair().getBluePose();
 
-				// if (!isInTeamAllianceZone(getPose()) || !isInTeamAllianceZone(targetPose)) {
-				executeRepulsorAutoAlign();
-				usedRepulsor = true;
-				// } else {
-				// 	if (usedRepulsor) {
-				// 		resetPID();
-				// 		usedRepulsor = false;
-				// 	}
-				// 	executeScaledFeedforwardAutoAlign();
-				// }
-				Logger.recordOutput("AutoAlign/Using Repulsor", usedRepulsor);
-				Logger.recordOutput("AutoAlign/Target Pose", targetPose);
+				// // if (!isInTeamAllianceZone(getPose()) || !isInTeamAllianceZone(targetPose)) {
+				// executeRepulsorAutoAlign();
+				// usedRepulsor = true;
+				// // } else {
+				// // 	if (usedRepulsor) {
+				// // 		resetPID();
+				// // 		usedRepulsor = false;
+				// // 	}
+				// // 	executeScaledFeedforwardAutoAlign();
+				// // }
+				// Logger.recordOutput("AutoAlign/Using Repulsor", usedRepulsor);
+				// Logger.recordOutput("AutoAlign/Target Pose", targetPose);
 				break;
 			case SNAKE_DRIVE:
 				Translation2d leftStickVector = new Translation2d(DRIVER_CONTROLLER.getRightX(), DRIVER_CONTROLLER.getRightY());

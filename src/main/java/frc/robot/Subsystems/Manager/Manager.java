@@ -33,7 +33,7 @@ public class Manager extends Subsystem<ManagerStates> {
 	private Shooter shooter;
 	private Hopper hopper;
 	private Intake intake;
-	private Vision vision;
+	//private Vision vision;
 	//private LEDs leds;
 	//private Climber climber;
 
@@ -68,9 +68,9 @@ public class Manager extends Subsystem<ManagerStates> {
 		shooter = Shooter.getInstance();
 		hopper = Hopper.getInstance();
 		intake = Intake.getInstance();
-		vision = Vision.getInstance();
-		//leds = LEDs.getInstance();
-		//climber = Climber.getInstance();
+		// vision = Vision.getInstance();
+		// leds = LEDs.getInstance();
+		// climber = Climber.getInstance();
 
 		// IDLE <---> EXTENDED_IDLE
 		addTrigger(ManagerStates.IDLE, ManagerStates.EXTENDED_IDLE, () -> DRIVER_CONTROLLER.getPOV() == 0);
@@ -127,8 +127,8 @@ public class Manager extends Subsystem<ManagerStates> {
 		// );
 		addTrigger(ManagerStates.WINDING_UP, ManagerStates.SHOOTING_HUB, () -> numTimesYPressed == 2 && drive.isInTeamAllianceZone(drive.getPose()));
 		addTrigger(ManagerStates.WINDING_UP_FIXED_SHOT, ManagerStates.SHOOTING_FIXED, DRIVER_CONTROLLER::getBButtonPressed);
-		//TODO: fried state transition, kind of works but if you hold and release then it transitions (also doesn't work if you tap Y really fast)
-		addTrigger(ManagerStates.WINDING_UP, ManagerStates.SHUTTLING, () -> numTimesYPressed == 2 && !drive.isInTeamAllianceZone(drive.getPose()));
+		// TODO: fried state transition, kind of works but if you hold and release then it transitions (also doesn't work if you tap Y really fast)
+		// addTrigger(ManagerStates.WINDING_UP, ManagerStates.SHUTTLING, () -> numTimesYPressed == 2 && !drive.isInTeamAllianceZone(drive.getPose()));
 
 		// SHOOTING --> WINDING_UP
 		addTrigger(ManagerStates.SHOOTING_FIXED, ManagerStates.WINDING_UP_FIXED_SHOT, DRIVER_CONTROLLER::getBButtonPressed);
@@ -141,7 +141,7 @@ public class Manager extends Subsystem<ManagerStates> {
 		addTrigger(ManagerStates.RETRACTING_CLIMBER, ManagerStates.EXTENDING_CLIMBER, OPERATOR_CONTROLLER::getRightBumperButtonPressed);
 
 		// Operator override HoodSnapDown
-		//addRunnableTrigger(shooter::toggleTrenchProtection, () -> OPERATOR_CONTROLLER.getPOV() == 180);
+		// addRunnableTrigger(shooter::toggleTrenchProtection, () -> OPERATOR_CONTROLLER.getPOV() == 180);
 
 		addRunnableTrigger(
 			() -> {
@@ -193,13 +193,13 @@ public class Manager extends Subsystem<ManagerStates> {
 		shooter.setState(getState().getShooterState());
 		hopper.setState(getState().getHopperState());
 		intake.setState(getState().getIntakeState());
-		//climber.setState(getState().getClimberState());
+		// climber.setState(getState().getClimberState());
 
 		shooter.periodic();
 		hopper.periodic();
 		intake.periodic();
 		drive.periodic();
-		vision.periodic();
+		//vision.periodic();
 
 		// Tracer.traceFunc("ShooterPeriodic", shooter::periodic);
 		// Tracer.traceFunc("HopperPeriodic", hopper::periodic);
