@@ -35,7 +35,7 @@ import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 //import edu.wpi.first.wpilibj.smartdashboard.Field2d;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+//import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.GlobalConstants.Controllers;
 import frc.robot.GlobalConstants.RobotMode;
 import frc.robot.Robot;
@@ -177,7 +177,6 @@ public class Drive extends Subsystem<DriveStates> {
 			() -> DRIVER_CONTROLLER.getRightBumperButtonPressed() && !Robot.getAutoalignedDisabled()
 		);
 		addRunnableTrigger(() -> setState(cachedState), () -> autoAligning && targetPose.relativeTo(getPose()).getTranslation().getNorm() < CLOSE_TO_POSE);
-		SmartDashboard.putBoolean("Autoalign Disabled", Robot.getAutoalignedDisabled());
 	}
 
 	/**
@@ -196,10 +195,6 @@ public class Drive extends Subsystem<DriveStates> {
 	public void runState() {
 		sotmTarget = Robot.isRedAlliance ? RED_HUB_POSE : BLUE_HUB_POSE;
 		if (DriverStation.isDisabled()) robotMirrored = false;
-
-		// Read autoalign enabled toggle from SmartDashboard
-		Robot.setAutoalignedDisabled(SmartDashboard.getBoolean("Autoalign Disabled", Robot.getAutoalignedDisabled()));
-		Logger.recordOutput(SUBSYSTEM_NAME + "/Autoalign Disabled", Robot.getAutoalignedDisabled());
 
 		if (DRIVER_CONTROLLER.getLeftTriggerAxis() > Controllers.TRIGGERS_REGISTER_POINT) driveMultiplier = SLOW_MODE_MULTIPLIER;
 		else driveMultiplier = 1;
