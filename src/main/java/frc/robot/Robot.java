@@ -34,6 +34,7 @@ public class Robot extends LoggedRobot {
 	public static boolean isRedAlliance = true;
 	public static Pair<Translation2d, Translation2d> allianceZone = RED_ALLIANCE_BOUNDS;
 	public static boolean isDisabled = false;
+	public static boolean autoAlignDisabled = false;
 
 	@Override
 	public void robotInit() {
@@ -72,10 +73,6 @@ public class Robot extends LoggedRobot {
 		autoChooser.addRoutine("Center Score Depot", autoRoutines::CenterScoreDepot);
 		autoChooser.addRoutine("Center Score Depot and Climb", autoRoutines::CenterScoreDepotClimb);
 		SmartDashboard.putData("autoChooser", autoChooser);
-
-		// Initialize autoalign toggle to enabled (true)
-		SmartDashboard.putBoolean("Autoalign Enabled", true);
-		Drive.getInstance().setAutoalignEnabled(true);
 
 		RobotModeTriggers.autonomous().whileTrue(autoChooser.selectedCommandScheduler());
 	}
@@ -133,5 +130,13 @@ public class Robot extends LoggedRobot {
 	public void disabledExit() {
 		isDisabled = false;
 		isRedAlliance = DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red;
+	}
+
+	public static boolean getAutoalignedDisabled() {
+		return autoAlignDisabled;
+	}
+
+	public static void setAutoalignedDisabled(boolean disabled) {
+		autoAlignDisabled = disabled;
 	}
 }

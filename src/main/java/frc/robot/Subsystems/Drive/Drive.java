@@ -39,6 +39,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.GlobalConstants.Controllers;
 import frc.robot.GlobalConstants.RobotMode;
 import frc.robot.Robot;
+import frc.robot.Subsystems.Drive.AutoAlign.AutoAlignConstants.Obstacles;
 import frc.robot.Subsystems.Drive.AutoAlign.MathHelpers;
 import frc.robot.Subsystems.Drive.TunerConstants.TunerSwerveDrivetrain;
 import frc.robot.Subsystems.Manager.Manager;
@@ -54,7 +55,6 @@ public class Drive extends Subsystem<DriveStates> {
 	private DriveIO driveIO;
 	private boolean isFieldRelative;
 	private boolean allowAutoAimlock = false;
-	private boolean autoalignEnabled = true;
 	private boolean robotMirrored = false;
 	private Pose2d lastPose = new Pose2d();
 	private Pose2d targetPose = Pose2d.kZero;
@@ -151,12 +151,12 @@ public class Drive extends Subsystem<DriveStates> {
 			() -> {
 				setState(DriveStates.AIMLOCK_HUB);
 			},
-			() -> isInTeamAllianceZone(getPose()) && Manager.getInstance().getState() == ManagerStates.WINDING_UP && !autoAligning && autoalignEnabled
+			() -> isInTeamAllianceZone(getPose()) && Manager.getInstance().getState() == ManagerStates.WINDING_UP && !autoAligning
 		);
 
 		// addRunnableTrigger(() -> isFieldRelative = !isFieldRelative, DRIVER_CONTROLLER::getBackButtonPressed);
-		addTrigger(DriveStates.NORMAL, DriveStates.AIMLOCK_HUB, () -> DRIVER_CONTROLLER.getLeftBumperButtonPressed() && autoalignEnabled);
-		addTrigger(DriveStates.SNAKE_DRIVE, DriveStates.AIMLOCK_HUB, () -> DRIVER_CONTROLLER.getLeftBumperButtonPressed() && autoalignEnabled);
+		addTrigger(DriveStates.NORMAL, DriveStates.AIMLOCK_HUB, () -> DRIVER_CONTROLLER.getLeftBumperButtonPressed());
+		addTrigger(DriveStates.SNAKE_DRIVE, DriveStates.AIMLOCK_HUB, () -> DRIVER_CONTROLLER.getLeftBumperButtonPressed());
 		addTrigger(DriveStates.AIMLOCK_HUB, DriveStates.SNAKE_DRIVE, DRIVER_CONTROLLER::getLeftBumperButtonPressed);
 		addTrigger(DriveStates.NORMAL, DriveStates.SNAKE_DRIVE, DRIVER_CONTROLLER::getAButtonPressed);
 		addTrigger(DriveStates.SNAKE_DRIVE, DriveStates.NORMAL, DRIVER_CONTROLLER::getAButtonPressed);
@@ -174,9 +174,10 @@ public class Drive extends Subsystem<DriveStates> {
 					else setState(DriveStates.AA_TRENCH_RIGHT);
 				}
 			},
-			() -> DRIVER_CONTROLLER.getRightBumperButtonPressed() && autoalignEnabled
+			() -> DRIVER_CONTROLLER.getRightBumperButtonPressed() && !Robot.getAutoalignedDisabled()
 		);
 		addRunnableTrigger(() -> setState(cachedState), () -> autoAligning && targetPose.relativeTo(getPose()).getTranslation().getNorm() < CLOSE_TO_POSE);
+		SmartDashboard.putBoolean("Autoalign Disabled", Robot.getAutoalignedDisabled());
 	}
 
 	/**
@@ -197,8 +198,8 @@ public class Drive extends Subsystem<DriveStates> {
 		if (DriverStation.isDisabled()) robotMirrored = false;
 
 		// Read autoalign enabled toggle from SmartDashboard
-		autoalignEnabled = SmartDashboard.getBoolean("Autoalign Enabled", true);
-		Logger.recordOutput(SUBSYSTEM_NAME + "/Autoalign Enabled", autoalignEnabled);
+		Robot.setAutoalignedDisabled(SmartDashboard.getBoolean("Autoalign Disabled", Robot.getAutoalignedDisabled()));
+		Logger.recordOutput(SUBSYSTEM_NAME + "/Autoalign Disabled", Robot.getAutoalignedDisabled());
 
 		if (DRIVER_CONTROLLER.getLeftTriggerAxis() > Controllers.TRIGGERS_REGISTER_POINT) driveMultiplier = SLOW_MODE_MULTIPLIER;
 		else driveMultiplier = 1;
@@ -215,6 +216,7 @@ public class Drive extends Subsystem<DriveStates> {
 
 		switch (getState()) {
 			case NORMAL:
+
 				executeDriveInstruction(
 					-DRIVER_CONTROLLER.getLeftY() * kSpeedAt12Volts.in(MetersPerSecond) * driveMultiplier,
 					-DRIVER_CONTROLLER.getLeftX() * kSpeedAt12Volts.in(MetersPerSecond) * driveMultiplier,
@@ -227,16 +229,6 @@ public class Drive extends Subsystem<DriveStates> {
 			case AIMLOCK_ALLIANCE_RIGHT_DEEP:
 			case AIMLOCK_ALLIANCE_RIGHT_SHALLOW:
 			case AIMLOCK_HUB:
-				if (!autoalignEnabled) {
-					// If autoalign is disabled, revert to normal drive
-					executeDriveInstruction(
-						-DRIVER_CONTROLLER.getLeftY() * kSpeedAt12Volts.in(MetersPerSecond) * driveMultiplier,
-						-DRIVER_CONTROLLER.getLeftX() * kSpeedAt12Volts.in(MetersPerSecond) * driveMultiplier,
-						-DRIVER_CONTROLLER.getRightX() * ANGULAR_VELOCITY_LIMIT.in(RadiansPerSecond) * 0.1,
-						isFieldRelative
-					);
-					break;
-				}
 				Pose2d target = sotmTarget;
 				Pose2d shooterPosition = getPose().plus(new Transform2d(ROBOT_TO_SHOOTER.getTranslation().toTranslation2d(), ROBOT_TO_SHOOTER.getRotation().toRotation2d()));
 				Pose2d shooterToTarget = target.relativeTo(shooterPosition);
@@ -262,7 +254,7 @@ public class Drive extends Subsystem<DriveStates> {
 			case AA_OUTSIDE_TRENCH_RIGHT:
 			case AA_TRENCH_LEFT:
 			case AA_TRENCH_RIGHT:
-				if (!autoalignEnabled) {
+				if (Robot.getAutoalignedDisabled()) {
 					// If autoalign is disabled, revert to normal drive
 					executeDriveInstruction(
 						-DRIVER_CONTROLLER.getLeftY() * kSpeedAt12Volts.in(MetersPerSecond) * driveMultiplier,
@@ -514,8 +506,9 @@ public class Drive extends Subsystem<DriveStates> {
 
 	public void driveRobotAutonomous(SwerveSample sample) {
 		// If autoalign is disabled, don't follow trajectories during autonomous
-		if (!autoalignEnabled) {
+		if (Robot.getAutoalignedDisabled()) {
 			// Just maintain current position/heading without trajectory following
+			System.out.println("Autoalign disabled, not following trajectory.");
 			driveIO.setControl(new SwerveRequest.RobotCentric().withVelocityX(0).withVelocityY(0).withRotationalRate(0).withDriveRequestType(SwerveModule.DriveRequestType.Velocity).withSteerRequestType(SwerveModule.SteerRequestType.MotionMagicExpo));
 			return;
 		}
@@ -525,7 +518,7 @@ public class Drive extends Subsystem<DriveStates> {
 		targetSpeeds.vxMetersPerSecond = targetSpeeds.vxMetersPerSecond + xController.calculate(currentPose.getX(), sample.x);
 		targetSpeeds.vyMetersPerSecond = targetSpeeds.vyMetersPerSecond + yController.calculate(currentPose.getY(), sample.y);
 
-		if (allowAutoAimlock && autoalignEnabled) {
+		if (allowAutoAimlock) {
 			targetSpeeds.omegaRadiansPerSecond = Math.abs(getAngleDiffBetweenShooterAndTarget().in(Degrees)) > MAX_YAW_ERROR.in(Degrees) ? shooterYawController.calculate(getAngleDiffBetweenShooterAndTarget().in(Radians), Math.PI) : 0;
 			// if (Math.abs(getAngleDiffBetweenShooterAndTarget().in(Degrees)) >= SWITCH_DIST.in(Degrees)) {
 			// 	targetSpeeds.omegaRadiansPerSecond = shooterYawControllerFast.calculate(getAngleDiffBetweenShooterAndTarget().in(Radians), Math.PI);
@@ -534,7 +527,7 @@ public class Drive extends Subsystem<DriveStates> {
 			// }
 		} else targetSpeeds.omegaRadiansPerSecond = headingController.calculate(currentPose.getRotation().getRadians(), sample.heading);
 
-		Logger.recordOutput("aimlock enabled", allowAutoAimlock && autoalignEnabled);
+		Logger.recordOutput("aimlock enabled", allowAutoAimlock);
 
 		if (Robot.isRedAlliance) driveIO.setControl(
 			new SwerveRequest.FieldCentric()
@@ -584,15 +577,6 @@ public class Drive extends Subsystem<DriveStates> {
 
 	public void setAutoAimlock(boolean allowed) {
 		this.allowAutoAimlock = allowed;
-	}
-
-	public void setAutoalignEnabled(boolean enabled) {
-		this.autoalignEnabled = enabled;
-		SmartDashboard.putBoolean("Autoalign Enabled", enabled);
-	}
-
-	public boolean isAutoalignEnabled() {
-		return this.autoalignEnabled;
 	}
 
 	public Angle getAngleDiffBetweenShooterAndTarget() {
