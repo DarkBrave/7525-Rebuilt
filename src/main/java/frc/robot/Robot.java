@@ -92,6 +92,7 @@ public class Robot extends LoggedRobot {
 		Preferences.setBoolean("Autoalign Disabled", autoAlignDisabled);
 
     	if (DriverStation.isFMSAttached() && autoAlignDisabled) {
+			DriverStation.reportWarning("WARNING: FMS Connected yet autoalign disabled!", false);
        		Logger.recordOutput("WARNING: FMS Connected yet autoalign disabled", true);
     	}
 	}
