@@ -174,7 +174,7 @@ public class Drive extends Subsystem<DriveStates> {
 					else setState(DriveStates.AA_TRENCH_RIGHT);
 				}
 			},
-			() -> DRIVER_CONTROLLER.getRightBumperButtonPressed() && !Robot.getAutoalignedDisabled()
+			() -> DRIVER_CONTROLLER.getRightBumperButtonPressed()
 		);
 		addRunnableTrigger(() -> setState(cachedState), () -> autoAligning && targetPose.relativeTo(getPose()).getTranslation().getNorm() < CLOSE_TO_POSE);
 	}
@@ -250,6 +250,7 @@ public class Drive extends Subsystem<DriveStates> {
 			case AA_TRENCH_LEFT:
 			case AA_TRENCH_RIGHT:
 				if (Robot.getAutoalignedDisabled()) {
+					Logger.recordOutput(SUBSYSTEM_NAME + "/WARNING: Autoalign Disabled", true);
 					// If autoalign is disabled, revert to normal drive
 					executeDriveInstruction(
 						-DRIVER_CONTROLLER.getLeftY() * kSpeedAt12Volts.in(MetersPerSecond) * driveMultiplier,
@@ -503,7 +504,6 @@ public class Drive extends Subsystem<DriveStates> {
 		// If autoalign is disabled, don't follow trajectories during autonomous
 		if (Robot.getAutoalignedDisabled()) {
 			// Just maintain current position/heading without trajectory following
-			System.out.println("Autoalign disabled, not following trajectory.");
 			driveIO.setControl(new SwerveRequest.RobotCentric().withVelocityX(0).withVelocityY(0).withRotationalRate(0).withDriveRequestType(SwerveModule.DriveRequestType.Velocity).withSteerRequestType(SwerveModule.SteerRequestType.MotionMagicExpo));
 			return;
 		}
