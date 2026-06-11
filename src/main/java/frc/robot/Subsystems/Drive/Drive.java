@@ -39,7 +39,6 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.GlobalConstants.Controllers;
 import frc.robot.GlobalConstants.RobotMode;
 import frc.robot.Robot;
-import frc.robot.Subsystems.Drive.AutoAlign.AutoAlignConstants.Obstacles;
 import frc.robot.Subsystems.Drive.AutoAlign.MathHelpers;
 import frc.robot.Subsystems.Drive.TunerConstants.TunerSwerveDrivetrain;
 import frc.robot.Subsystems.Manager.Manager;
@@ -155,8 +154,8 @@ public class Drive extends Subsystem<DriveStates> {
 		);
 
 		// addRunnableTrigger(() -> isFieldRelative = !isFieldRelative, DRIVER_CONTROLLER::getBackButtonPressed);
-		addTrigger(DriveStates.NORMAL, DriveStates.AIMLOCK_HUB, () -> DRIVER_CONTROLLER.getLeftBumperButtonPressed());
-		addTrigger(DriveStates.SNAKE_DRIVE, DriveStates.AIMLOCK_HUB, () -> DRIVER_CONTROLLER.getLeftBumperButtonPressed());
+		addTrigger(DriveStates.NORMAL, DriveStates.AIMLOCK_HUB, DRIVER_CONTROLLER::getLeftBumperButtonPressed);
+		addTrigger(DriveStates.SNAKE_DRIVE, DriveStates.AIMLOCK_HUB, DRIVER_CONTROLLER::getLeftBumperButtonPressed);
 		addTrigger(DriveStates.AIMLOCK_HUB, DriveStates.SNAKE_DRIVE, DRIVER_CONTROLLER::getLeftBumperButtonPressed);
 		addTrigger(DriveStates.NORMAL, DriveStates.SNAKE_DRIVE, DRIVER_CONTROLLER::getAButtonPressed);
 		addTrigger(DriveStates.SNAKE_DRIVE, DriveStates.NORMAL, DRIVER_CONTROLLER::getAButtonPressed);
@@ -174,7 +173,7 @@ public class Drive extends Subsystem<DriveStates> {
 					else setState(DriveStates.AA_TRENCH_RIGHT);
 				}
 			},
-			() -> DRIVER_CONTROLLER.getRightBumperButtonPressed()
+			DRIVER_CONTROLLER::getRightBumperButtonPressed
 		);
 		addRunnableTrigger(() -> setState(cachedState), () -> autoAligning && targetPose.relativeTo(getPose()).getTranslation().getNorm() < CLOSE_TO_POSE);
 	}
@@ -211,7 +210,6 @@ public class Drive extends Subsystem<DriveStates> {
 
 		switch (getState()) {
 			case NORMAL:
-
 				executeDriveInstruction(
 					-DRIVER_CONTROLLER.getLeftY() * kSpeedAt12Volts.in(MetersPerSecond) * driveMultiplier,
 					-DRIVER_CONTROLLER.getLeftX() * kSpeedAt12Volts.in(MetersPerSecond) * driveMultiplier,
