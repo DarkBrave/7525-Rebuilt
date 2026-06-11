@@ -73,6 +73,10 @@ public class Robot extends LoggedRobot {
 		autoChooser.addRoutine("Center Score Depot and Climb", autoRoutines::CenterScoreDepotClimb);
 		SmartDashboard.putData("autoChooser", autoChooser);
 
+		// Initialize autoalign toggle to enabled (true)
+		SmartDashboard.putBoolean("Autoalign Enabled", true);
+		Drive.getInstance().setAutoalignEnabled(true);
+
 		RobotModeTriggers.autonomous().whileTrue(autoChooser.selectedCommandScheduler());
 	}
 

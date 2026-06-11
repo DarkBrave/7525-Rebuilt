@@ -59,6 +59,23 @@
             }
           },
           {
+            "title": "Autoalign Enabled",
+            "x": 1107.0,
+            "y": 123.0,
+            "width": 123.0,
+            "height": 123.0,
+            "type": "Boolean Box",
+            "properties": {
+              "topic": "/SmartDashboard/Autoalign Enabled",
+              "period": 0.06,
+              "data_type": "boolean",
+              "true_color": 4283215696,
+              "false_color": 4294198070,
+              "true_icon": "None",
+              "false_icon": "None"
+            }
+          },
+          {
             "title": "TIME UNTIL NEXT SHIFT",
             "x": 1230.0,
             "y": 246.0,
@@ -200,6 +217,19 @@
               "time_display_mode": "Minutes and Seconds",
               "red_start_time": 20,
               "yellow_start_time": 30
+            }
+          },
+          {
+            "title": "Autoalign Enabled",
+            "x": 1230.0,
+            "y": 0.0,
+            "width": 123.0,
+            "height": 123.0,
+            "type": "Toggle Switch",
+            "properties": {
+              "topic": "/SmartDashboard/Autoalign Enabled",
+              "period": 0.06,
+              "data_type": "boolean"
             }
           }
         ]
